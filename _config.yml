@@ -8,12 +8,14 @@ permalink: pretty
 cover_image: /bg.jpg
 
 # Gems
+#plugins:
+#- jekyll-gist
+#  - jekyll-paginate
+#- jekyll-seo-tag
+#- jekyll-feed
+#- jekyll-sitemap
+
 plugins:
-  - jekyll-gist
-  - jekyll-paginate
-  - jekyll-seo-tag
-  - jekyll-feed
-  - jekyll-sitemap
   - jekyll-remote-theme
 
 remote_theme: vszhub/not-pure-poole
