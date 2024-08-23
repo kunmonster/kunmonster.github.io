@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://10.50.1.19:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://10.50.1.19:4000/" rel="alternate" type="text/html" /><updated>2024-08-23T21:09:35+08:00</updated><id>http://10.50.1.19:4000/feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><entry><title type="html">Welcome to Not Pure Poole</title><link href="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html" rel="alternate" type="text/html" title="Welcome to Not Pure Poole" /><published>2020-09-29T23:18:00+08:00</published><updated>2020-10-01T01:08:25+08:00</updated><id>http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86</id><content type="html" xml:base="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html"><![CDATA[<h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
+<hr />
+
+<h4 id="基础正则basic-regular-expressionbasic-regex">基础正则(Basic Regular Expression—–Basic RegEx)</h4>
+
+<p>元字符</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">字符</th>
+      <th style="text-align: center">作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">*</td>
+      <td style="text-align: center">前一个字符任意次</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">.</td>
+      <td style="text-align: center">匹配除了换行符外的任意一个字符</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">^</td>
+      <td style="text-align: center">匹配行首</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">$</td>
+      <td style="text-align: center">匹配行尾</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">[ ]</td>
+      <td style="text-align: center">匹配中括号中的任意一个</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">[^ ]</td>
+      <td style="text-align: center">匹配中括号字符以外的任意一个字符—-相当于—–^[]的意思</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">{n}</td>
+      <td style="text-align: center">表示前面的字符出现n次</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">{n,m}</td>
+      <td style="text-align: center">前一字符最少出现n次最多出现m次</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">{n, }</td>
+      <td style="text-align: center">前一字符最少出现n次</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">{ ,m}</td>
+      <td style="text-align: center">前一字符最多出现m次</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\</td>
+      <td style="text-align: center">转义字符</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="扩展正则">扩展正则</h4>
+
+<p>元字符</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">字符</th>
+      <th style="text-align: center">功能</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">+</td>
+      <td style="text-align: center">前面的字符重复一次或者一次以上</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">?</td>
+      <td style="text-align: center">前面的字符重复一次或者0次</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">|</td>
+      <td style="text-align: center">分支，注意这个符号实在表达式层面上运作，区别于[]运作于字符层面</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">( )</td>
+      <td style="text-align: center">查找组</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">( )+</td>
+      <td style="text-align: center">辨别多个重复组</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\数字</td>
+      <td style="text-align: center">有多个分组时表明分组顺序，用对应顺序的分组来代替此序号</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">(:? 内容)</td>
+      <td style="text-align: center">非捕获分组，使用序号时，不会计入序号中</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\w</td>
+      <td style="text-align: center">pu查找字母、数字和下划线</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\w</td>
+      <td style="text-align: center">匹配除字母、数字、下划线以外的字符（与上面的相反）</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\d</td>
+      <td style="text-align: center">匹配数字,grep不支持</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\D</td>
+      <td style="text-align: center">匹配数字以外的字符,grep不支持</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\s</td>
+      <td style="text-align: center">匹配空白符</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">\S</td>
+      <td style="text-align: center">匹配非空白符</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">xxx(?=条件)</td>
+      <td style="text-align: center">正向先行断言,匹配xxx后面有指定字符的行</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">xxx(?!条件)</td>
+      <td style="text-align: center">负向先行断言,匹配xxx后面没有指定字符的行</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">(?&lt;=条件)xxx</td>
+      <td style="text-align: center">正向后行断言,匹配xxx前面有指定字符的行</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">(?&lt;!条件)xxx</td>
+      <td style="text-align: center">负向后行断言,匹配xxx前面没有指定字符</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="grep">grep</h3>
+<hr />
+<p>命令格式</p>
+
+<ul>
+  <li>grep [option] [PATTERN] [FILE…]</li>
+  <li>如果没有指定FILE那么对当前工作目录搜索</li>
+</ul>
+
+<p>常用选项</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">选项</th>
+      <th style="text-align: center">功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">-E</td>
+      <td style="text-align: center">此选项将使PATTERN支持扩展的正则—等价于—egrep</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-F</td>
+      <td style="text-align: center">将PATTERN理解成字符串而不是正则的表达式</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-i</td>
+      <td style="text-align: center">忽略大小写</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-v</td>
+      <td style="text-align: center">改变输出匹配行，转而输出非匹配行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-x</td>
+      <td style="text-align: center">只需要整行匹配的行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-c</td>
+      <td style="text-align: center">统计输出结果的行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-o</td>
+      <td style="text-align: center">只输出匹配的内容本身</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-w</td>
+      <td style="text-align: center">只匹配过滤的单词</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-n</td>
+      <td style="text-align: center">输出行号</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-H</td>
+      <td style="text-align: center">输出文件名:匹配内容</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-A</td>
+      <td style="text-align: center">显示匹配行的后面的行数</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-B</td>
+      <td style="text-align: center">before,显示匹配行前面的行数</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-C</td>
+      <td style="text-align: center">显示匹配行前面和后面的行数</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">–no-group-separator</td>
+      <td style="text-align: center">使用前面的-A,B,C会在两个匹配行之间使用分隔行，此选项可以取消</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">–group-separator</td>
+      <td style="text-align: center">=’xxxx’指定分隔符号</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-r</td>
+      <td style="text-align: center">递归grep,此时不用指定文件</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-l</td>
+      <td style="text-align: center">只打印文件名，不打印匹配内容</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-R</td>
+      <td style="text-align: center">递归但是不输出符号链接和文件内容</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-L</td>
+      <td style="text-align: center">只打印没被选中行的文件名称</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-z</td>
+      <td style="text-align: center">数据行以0（NULL）结尾而不是换行符</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-Z</td>
+      <td style="text-align: center">在文件名后面打印null</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">–include=GLOB</td>
+      <td style="text-align: center">只查找匹配 GLOB（含通配符的文件模式）的文件</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">–exclude=GLOB</td>
+      <td style="text-align: center">跳过匹配 GLOB 的文件</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">–exclude-dir=GLOB</td>
+      <td style="text-align: center">在进行递归匹配的时候排除的文件夹，用多次参数指定多个目录</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-d 动作, –directories=动作</td>
+      <td style="text-align: center">处理目录的方式:<动作> 可以是 "read"、"recurse" 或 "skip",<动作> 可以是 "read" 或 "ski,</动作></动作></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-b</td>
+      <td style="text-align: center">输出结果的同时打印字节偏移量</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="sed">sed</h3>
+<hr />
+
+<p>操作、过滤和转换文本的强大工具</p>
+
+<ul>
+  <li>一次读取一行，放入sed工作车间（模式车间，文本数据读入内存）</li>
+  <li>模式匹配
+    <ul>
+      <li>匹配失败（默认输出到屏幕）</li>
+      <li>匹配成功（编辑，输出到屏幕）</li>
+    </ul>
+  </li>
+</ul>
+
+<p>语法</p>
+
+<ul>
+  <li>sed [ 选项 ]   [ sed内置命令字符 ]  [ 输入文件 ]</li>
+  <li>注意内置命令字符需要单引号括起来</li>
+  <li>内置命令中顺序为
+    <ul>
+      <li>[ 范围命令]</li>
+      <li>注意范围与命令之间，命令与命令之间无需分隔</li>
+    </ul>
+  </li>
+</ul>
+
+<p>选项</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">参数</th>
+      <th style="text-align: center">功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">-n</td>
+      <td style="text-align: center">取消默认sed的输出,常与内置命令p一起使用</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-i</td>
+      <td style="text-align: center">直接将修改结果写入文件,不用-i,sed修改的是内存数据</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-e</td>
+      <td style="text-align: center">多次编辑,不需要再管管道符,一个命令脚本一个-e</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-r</td>
+      <td style="text-align: center">支持扩展正则</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>内置命令</p>
+
+<p>«««&lt; HEAD
+|     命令      |                                 功能                                  |
+| :———: | :—————————————————————–: |
+|      a      |               append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符)                |
+|      d      |                            Delete,删除匹配行                             |
+|      i      |                    insert,表示插入文本,在指定行前添加一行/多行文本                     |
+|      p      |                      print,打印匹配行的内容,通常与-n一起使用                       |
+| s/正则/替换内容/g | 匹配正则内容并替换（支持正则）,结尾g表示全局匹配，将小写转换为大写s/[aeiou]/\u&amp;/g或者y/aeiou/AEIOU/ |
+=======
+|     命令      |                   功能                   |
+| :———: | :————————————: |
+|      a      | append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符) |
+|      d      |              Delete,删除匹配行              |
+|      i      |      insert,表示插入文本,在指定行前添加一行/多行文本      |
+|      p      |        print,打印匹配行的内容,通常与-n一起使用        |
+| s/正则/替换内容/g |       匹配正则内容并替换（支持正则）,结尾g表示全局匹配        |
+|      Q      |          sed立即退出，不再处理，之前的将输出           |
+|      N      |      读取下一行并加入模式空间，即模式空间拥有当前行和下一行       |
+|      P      |             打印模式空间第一行，当前行              |
+|      D      |  删除模式空间第一行，并循环处理剩余部分，如果模式空间为空，则读取下一行   |</p>
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <blockquote>
+              <p>origin/master</p>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>sed匹配范围</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">范围</th>
+      <th style="text-align: center">解释</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">空地址(不加数字)</td>
+      <td style="text-align: center">全文处理</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">单地址(一个数字)</td>
+      <td style="text-align: center">指定文件的某一行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">/pattern/</td>
+      <td style="text-align: center">被模式匹配到的每一行，如果不表示范围的话，在两个正则表达式之间需要分号隔开</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">范围区间</td>
+      <td style="text-align: center">10,20 10到20行;10,+5第10行向下5行,/pattern1/, /pattern2/; ‘n,4’表示第n行到结尾,包括第n行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">步长</td>
+      <td style="text-align: center">1~2,表示1、3、5、7、9行,2~2表示2、4、5、6、8、10偶数行</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意</p>
+<ul>
+  <li>在sed中，单引号和双引号有所不同,如果要在pattern,command中使用变量，那么最好使用双引号，如果不用变量可以使用单引号</li>
+</ul>
+
+<h3 id="awk">awk</h3>
+<hr />
+<p>更适合编辑、处理匹配到的文本内容</p>
+
+<p>使用语法</p>
+<ul>
+  <li>awk [ option ] ‘pattern[action]’ file …</li>
+  <li>awk 参数 ‘条件动作’ 文件</li>
+  <li>awk options ‘pattern {action}’ file</li>
+  <li>参数中的模式代表，条件或者正则等模式，条件包括对行限定等</li>
+</ul>
+
+<p>内置变量</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">形式</th>
+      <th style="text-align: center">解释</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">$n</td>
+      <td style="text-align: center">指定分隔符后,当前记录的第n个字段</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">$0</td>
+      <td style="text-align: center">完整的输入记录，整行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">FS</td>
+      <td style="text-align: center">字段分隔符,默认是空格</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">NF(number of fields )</td>
+      <td style="text-align: center">分割后,当前行一共有多少个字段</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">NR ( Number of records)</td>
+      <td style="text-align: center">当前记录数,行数</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意</p>
+<ul>
+  <li>使用-F “ ”指定分隔符时，可以使用”[多个分隔符]”方括号来使用多个分隔符</li>
+</ul>]]></content><author><name></name></author><category term="jekyll theme" /><category term="jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[正则表达式(Regular Expression)]]></summary></entry></feed>
