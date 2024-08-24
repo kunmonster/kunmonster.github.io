@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://10.50.1.19:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://10.50.1.19:4000/" rel="alternate" type="text/html" /><updated>2024-08-23T21:09:35+08:00</updated><id>http://10.50.1.19:4000/feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><entry><title type="html">Welcome to Not Pure Poole</title><link href="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html" rel="alternate" type="text/html" title="Welcome to Not Pure Poole" /><published>2020-09-29T23:18:00+08:00</published><updated>2020-10-01T01:08:25+08:00</updated><id>http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86</id><content type="html" xml:base="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html"><![CDATA[<h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io/kkmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io/kkmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-08-24T09:35:43+08:00</updated><id>https://kunmonster.github.io/kkmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Linux 文本处理</title><link href="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" rel="alternate" type="text/html" title="Linux 文本处理" /><published>2023-09-29T23:18:00+08:00</published><updated>2023-09-29T23:18:00+08:00</updated><id>https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86</id><content type="html" xml:base="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"><![CDATA[<h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
 <hr />
 
 <h4 id="基础正则basic-regular-expressionbasic-regex">基础正则(Basic Regular Expression—–Basic RegEx)</h4>
@@ -346,41 +346,56 @@
 
 <p>内置命令</p>
 
-<p>«««&lt; HEAD
-|     命令      |                                 功能                                  |
-| :———: | :—————————————————————–: |
-|      a      |               append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符)                |
-|      d      |                            Delete,删除匹配行                             |
-|      i      |                    insert,表示插入文本,在指定行前添加一行/多行文本                     |
-|      p      |                      print,打印匹配行的内容,通常与-n一起使用                       |
-| s/正则/替换内容/g | 匹配正则内容并替换（支持正则）,结尾g表示全局匹配，将小写转换为大写s/[aeiou]/\u&amp;/g或者y/aeiou/AEIOU/ |
-=======
-|     命令      |                   功能                   |
-| :———: | :————————————: |
-|      a      | append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符) |
-|      d      |              Delete,删除匹配行              |
-|      i      |      insert,表示插入文本,在指定行前添加一行/多行文本      |
-|      p      |        print,打印匹配行的内容,通常与-n一起使用        |
-| s/正则/替换内容/g |       匹配正则内容并替换（支持正则）,结尾g表示全局匹配        |
-|      Q      |          sed立即退出，不再处理，之前的将输出           |
-|      N      |      读取下一行并加入模式空间，即模式空间拥有当前行和下一行       |
-|      P      |             打印模式空间第一行，当前行              |
-|      D      |  删除模式空间第一行，并循环处理剩余部分，如果模式空间为空，则读取下一行   |</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <blockquote>
-        <blockquote>
-          <blockquote>
-            <blockquote>
-              <p>origin/master</p>
-            </blockquote>
-          </blockquote>
-        </blockquote>
-      </blockquote>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">命令</th>
+      <th style="text-align: center">功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">s/正则/替换内容/g</td>
+      <td style="text-align: center">匹配正则内容并替换（支持正则）,结尾g表示全局匹配，将小写转换为大写s/[aeiou]/\u&amp;/g或者y/aeiou/AEIOU/</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">a</td>
+      <td style="text-align: center">append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">d</td>
+      <td style="text-align: center">Delete,删除匹配行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">i</td>
+      <td style="text-align: center">insert,表示插入文本,在指定行前添加一行/多行文本</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">p</td>
+      <td style="text-align: center">print,打印匹配行的内容,通常与-n一起使用</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">s/正则/替换内容/g</td>
+      <td style="text-align: center">匹配正则内容并替换（支持正则）,结尾g表示全局匹配</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Q</td>
+      <td style="text-align: center">sed立即退出，不再处理，之前的将输出</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">读取下一行并加入模式空间，即模式空间拥有当前行和下一行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">P</td>
+      <td style="text-align: center">打印模式空间第一行，当前行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">D</td>
+      <td style="text-align: center">删除模式空间第一行，并循环处理剩余部分，如果模式空间为空，则读取下一行</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>sed匹配范围</p>
 
@@ -468,4 +483,4 @@
 <p>注意</p>
 <ul>
   <li>使用-F “ ”指定分隔符时，可以使用”[多个分隔符]”方括号来使用多个分隔符</li>
-</ul>]]></content><author><name></name></author><category term="jekyll theme" /><category term="jekyll" /><category term="tutorial" /><summary type="html"><![CDATA[正则表达式(Regular Expression)]]></summary></entry></feed>
+</ul>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="Linux" /><category term="Text" /><summary type="html"><![CDATA[正则表达式(Regular Expression)]]></summary></entry></feed>

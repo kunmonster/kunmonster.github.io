@@ -7,30 +7,33 @@
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/grids-responsive-min.css">
   <link rel="stylesheet" href="/assets/styles.css"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Welcome to Not Pure Poole | kkmonster</title>
+<title>Linux 文本处理 | kkmonster</title>
 <meta name="generator" content="Jekyll v3.10.0" />
-<meta property="og:title" content="Welcome to Not Pure Poole" />
-<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="Linux 文本处理" />
+<meta name="author" content="Feng kunjiang" />
+<meta property="og:locale" content="en" />
 <meta name="description" content="正则表达式(Regular Expression)" />
 <meta property="og:description" content="正则表达式(Regular Expression)" />
-<link rel="canonical" href="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html" />
-<meta property="og:url" content="http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html" />
+<link rel="canonical" href="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" />
+<meta property="og:url" content="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" />
 <meta property="og:site_name" content="kkmonster" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-09-29T23:18:00+08:00" />
+<meta property="article:published_time" content="2023-09-29T23:18:00+08:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Welcome to Not Pure Poole" />
+<meta property="twitter:title" content="Linux 文本处理" />
+<meta name="google-site-verification" content="xxxxx" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2020-10-01T01:08:25+08:00","datePublished":"2020-09-29T23:18:00+08:00","description":"正则表达式(Regular Expression)","headline":"Welcome to Not Pure Poole","mainEntityOfPage":{"@type":"WebPage","@id":"http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html"},"url":"http://10.50.1.19:4000/2020/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Feng kunjiang","url":"https://github.com/kunmonster/"},"dateModified":"2023-09-29T23:18:00+08:00","datePublished":"2023-09-29T23:18:00+08:00","description":"正则表达式(Regular Expression)","headline":"Linux 文本处理","mainEntityOfPage":{"@type":"WebPage","@id":"https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"},"url":"https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"}</script>
 <!-- End Jekyll SEO tag -->
-<link type="application/atom+xml" rel="alternate" href="http://10.50.1.19:4000/feed.xml" title="kkmonster" />
+<link type="application/atom+xml" rel="alternate" href="https://kunmonster.github.io/kkmonster.github.io//feed.xml" title="kkmonster" />
 </head>
 
 
   <body>
 
-    <div class="container pure-g"><div class="sidebar-left pure-u-1 pure-u-md-1-4" style="background-color: rgb(40, 73, 77); color: rgb(255, 255, 255); "><header class="masthead">
-  
+    <div class="container pure-g"><div class="sidebar-left pure-u-1 pure-u-md-1-4" style="background-color: rgb(40, 73, 77); color: rgb(255, 255, 255); background-image: url(/bg.jpg);"><header class="masthead">
+  <div class="avatar"><img src="/avatar.jpg" class="avatar-image" alt="Feng kunjiang">
+    </div>
   <div class="masthead-title">
     <a href="/" title="Home">kkmonster</a>
   </div>
@@ -48,10 +51,8 @@
 
       <div class="content pure-u-1 pure-u-md-1-2"><main>
   <article class="post">
-  <h1 class="post-title">Welcome to Not Pure Poole</h1>
-  <div class="post-meta"><time datetime="2020-09-29T23:18:00+08:00" itemprop="datePublished">29 Sep 2020</time><span> ~ </span><time datetime="2020-10-01T01:08:25+08:00" itemprop="dateModified">
-        1 Oct 2020
-      </time></div>
+  <h1 class="post-title">Linux 文本处理</h1>
+  <div class="post-meta"><time datetime="2023-09-29T23:18:00+08:00" itemprop="datePublished">29 Sep 2023</time></div>
 
   <h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
 <hr />
@@ -401,41 +402,56 @@
 
 <p>内置命令</p>
 
-<p>«««&lt; HEAD
-|     命令      |                                 功能                                  |
-| :———: | :—————————————————————–: |
-|      a      |               append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符)                |
-|      d      |                            Delete,删除匹配行                             |
-|      i      |                    insert,表示插入文本,在指定行前添加一行/多行文本                     |
-|      p      |                      print,打印匹配行的内容,通常与-n一起使用                       |
-| s/正则/替换内容/g | 匹配正则内容并替换（支持正则）,结尾g表示全局匹配，将小写转换为大写s/[aeiou]/\u&amp;/g或者y/aeiou/AEIOU/ |
-=======
-|     命令      |                   功能                   |
-| :———: | :————————————: |
-|      a      | append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符) |
-|      d      |              Delete,删除匹配行              |
-|      i      |      insert,表示插入文本,在指定行前添加一行/多行文本      |
-|      p      |        print,打印匹配行的内容,通常与-n一起使用        |
-| s/正则/替换内容/g |       匹配正则内容并替换（支持正则）,结尾g表示全局匹配        |
-|      Q      |          sed立即退出，不再处理，之前的将输出           |
-|      N      |      读取下一行并加入模式空间，即模式空间拥有当前行和下一行       |
-|      P      |             打印模式空间第一行，当前行              |
-|      D      |  删除模式空间第一行，并循环处理剩余部分，如果模式空间为空，则读取下一行   |</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <blockquote>
-        <blockquote>
-          <blockquote>
-            <blockquote>
-              <p>origin/master</p>
-            </blockquote>
-          </blockquote>
-        </blockquote>
-      </blockquote>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">命令</th>
+      <th style="text-align: center">功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">s/正则/替换内容/g</td>
+      <td style="text-align: center">匹配正则内容并替换（支持正则）,结尾g表示全局匹配，将小写转换为大写s/[aeiou]/\u&amp;/g或者y/aeiou/AEIOU/</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">a</td>
+      <td style="text-align: center">append,对文本追加,在指定行后面添加一行或者多行文本(可以使用换行符)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">d</td>
+      <td style="text-align: center">Delete,删除匹配行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">i</td>
+      <td style="text-align: center">insert,表示插入文本,在指定行前添加一行/多行文本</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">p</td>
+      <td style="text-align: center">print,打印匹配行的内容,通常与-n一起使用</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">s/正则/替换内容/g</td>
+      <td style="text-align: center">匹配正则内容并替换（支持正则）,结尾g表示全局匹配</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Q</td>
+      <td style="text-align: center">sed立即退出，不再处理，之前的将输出</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">读取下一行并加入模式空间，即模式空间拥有当前行和下一行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">P</td>
+      <td style="text-align: center">打印模式空间第一行，当前行</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">D</td>
+      <td style="text-align: center">删除模式空间第一行，并循环处理剩余部分，如果模式空间为空，则读取下一行</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>sed匹配范围</p>
 
@@ -531,9 +547,8 @@
       <div class="post-tags-section">
   <i class="post-tags-icon fas fa-tags"></i>
   <ul class="post-tags"><li>
-        <a class="post-tag" href="/tags/#jekyll-theme">jekyll-theme</a></li><li>
-        <a class="post-tag" href="/tags/#jekyll">jekyll</a></li><li>
-        <a class="post-tag" href="/tags/#tutorial">tutorial</a></li></ul>
+        <a class="post-tag" href="/tags/#linux">linux</a></li><li>
+        <a class="post-tag" href="/tags/#text">text</a></li></ul>
 </div>
 
   
@@ -546,8 +561,7 @@
 </main>
 
 <footer class="footer"><small>
-    &copy; 2020&nbsp;-&nbsp;2024 . All rights reserved.
-    Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/vszhub/not-pure-poole">Not Pure Poole</a>.
+    &copy; 2023&nbsp;-&nbsp;2024 <a href="https://github.com/kunmonster/">Feng kunjiang</a>. All rights reserved.
   </small>
 </footer>
 </div>
