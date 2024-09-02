@@ -1,4 +1,195 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io/kkmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io/kkmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-08-24T09:35:43+08:00</updated><id>https://kunmonster.github.io/kkmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Linux 文本处理</title><link href="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" rel="alternate" type="text/html" title="Linux 文本处理" /><published>2023-09-29T23:18:00+08:00</published><updated>2023-09-29T23:18:00+08:00</updated><id>https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86</id><content type="html" xml:base="https://kunmonster.github.io/kkmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"><![CDATA[<h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-09-02T16:29:36+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">理解结构变异BED在VCF中的描述</title><link href="https://kunmonster.github.io//2024/09/02/%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82BND%E5%9C%A8VCF%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%A4%BA/" rel="alternate" type="text/html" title="理解结构变异BED在VCF中的描述" /><published>2024-09-02T16:28:00+08:00</published><updated>2024-09-02T16:28:00+08:00</updated><id>https://kunmonster.github.io//2024/09/02/%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82BND%E5%9C%A8VCF%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%A4%BA</id><content type="html" xml:base="https://kunmonster.github.io//2024/09/02/%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82BND%E5%9C%A8VCF%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%A4%BA/"><![CDATA[<h3 id="结构变异种类">结构变异种类</h3>
+<hr />
+<ul>
+  <li>INFO字段: SVTYPE</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">value</th>
+      <th style="text-align: center">meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">DEL</td>
+      <td style="text-align: center">deletion</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">DUP</td>
+      <td style="text-align: center">duplication</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"> INS</td>
+      <td style="text-align: center">insertion</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">INV</td>
+      <td style="text-align: center">inversion</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">CNV</td>
+      <td style="text-align: center">copy number variation</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">BND</td>
+      <td style="text-align: center">breakend</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="结构变异在vcf文件中具体描述">结构变异在VCF文件中具体描述</h3>
+<hr />
+
+<p>普通的变异都好理解，只是BND有点麻烦</p>
+
+<blockquote>
+  <p>ALT中会出现的四种情况</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">ALT</th>
+      <th style="text-align: center">meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">N]chr:pos]</td>
+      <td style="text-align: center">当前染色体是断裂染色体的左边部分、N是断裂点、从N开始向右延伸至与染色体chr的pos位置断点连接</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">]chr:pos]N</td>
+      <td style="text-align: center">当前片段是断裂染色体的右边一半、N是断裂点，从N开始左边与染色体chr的pos位置断裂的片段接上，N所在的片段还是充当右边片段，接上的另一片段充当左边部分</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">N[chr:pos[</td>
+      <td style="text-align: center">当前片段是断裂染色体的左边的一半，所以N就是断裂点，从该位置向右与染色体chr的pos位置接上，即接上后该片段仍充当左边，接上的另一片段就充当右边部分</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">[chr:pos[N</td>
+      <td style="text-align: center">当前染色体的N，染色体断裂后右边那条的断裂点，所以从N开始，将另一条的chr断裂的pos处接到N的左边，替换掉左边断掉的</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>总结上述四种变异的组织方式有以下规律</p>
+<ul>
+  <li>只要是断裂后的左边片段，那么断裂点总是出现在标识另一片段的左边，断裂的右片段同理</li>
+  <li>如果两个相接的片段在断裂前分别是一左一右，那么必然是$N[CHR:POS[$ 和 $]CHR:POS]N$ 相连</li>
+  <li>但是如果两个相接的片段在断裂前都是左边的话，那么必然是$N]CHR:POS]$ 和 $N]CHR:POS]$ 相连</li>
+  <li>如果两个相接的片段在断裂前都是右边的话，那么必然是$[CHR:POS[N$ 和 $[CHR:POS[N$ 相连</li>
+</ul>
+
+<blockquote>
+  <p>下面是官方文档给的例子</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">#CHROM</th>
+      <th style="text-align: center">POS</th>
+      <th style="text-align: center">ID</th>
+      <th style="text-align: center">REF</th>
+      <th style="text-align: center">ALT</th>
+      <th style="text-align: center">QUAL</th>
+      <th style="text-align: center">FILTER</th>
+      <th style="text-align: center">INFO</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">321681</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">W</td>
+      <td style="text-align: center">G</td>
+      <td style="text-align: center">G]17:198982]</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">321682</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">V</td>
+      <td style="text-align: center">T</td>
+      <td style="text-align: center">]13:123456]T</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">13</td>
+      <td style="text-align: center">123456</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">U</td>
+      <td style="text-align: center">C</td>
+      <td style="text-align: center">C[2:321682[</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">13</td>
+      <td style="text-align: center">123457</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">X</td>
+      <td style="text-align: center">A</td>
+      <td style="text-align: center">[17:198983[A</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">17</td>
+      <td style="text-align: center">198982</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">Y</td>
+      <td style="text-align: center">A</td>
+      <td style="text-align: center">A]2:321681]</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">17</td>
+      <td style="text-align: center">198983</td>
+      <td style="text-align: center">bnd</td>
+      <td style="text-align: center">Z</td>
+      <td style="text-align: center">C</td>
+      <td style="text-align: center">[13:123457[C</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">PASS</td>
+      <td>SVTYPE=BND</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>表头部分分别是：染色体号、变异起始位置、变异ID、参考基因组中的序列、变异的碱基、质量、过滤情况、INFO</p>
+
+<p>第一条变异：G]17:198982] 表示该片段断裂后是左边片段，连接到17号染色体的198982号位置；与之配对的第5个变异，A]2:321681]表示17号染色体这个断裂后也是左边片段，所以与第一条变异的连接</p>
+
+<p>第二条变异：]13:123456]T 表示该片段断裂后是右边片段，连接到13号染色体断裂后的左边片段；与之配对的第三条变异C[2:321682[表示该片段断裂后是左边片段，连接到2号染色体断裂后的右边片段</p>
+
+<p>第四条变异：[17:198983[A表示该片段断裂后是右边片段，连接到17号染色体的198983位置；与之对应的第6个变异，[13:123457[C表示该片段断裂后是右边片段，连接到13号染色体的右边片段</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/20240902112306.png" alt="image.png" /></p>
+
+<p>实际上还有其他情况</p>
+<ul>
+  <li>BND接着insertion</li>
+  <li>Large Insertion</li>
+  <li>Multiple mates</li>
+  <li>et</li>
+</ul>
+
+<p>未完………………</p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="bioinformatics" /><category term="sv" /><category term="vcf" /><summary type="html"><![CDATA[结构变异种类 INFO字段: SVTYPE]]></summary></entry><entry><title type="html">Linux 文本处理</title><link href="https://kunmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" rel="alternate" type="text/html" title="Linux 文本处理" /><published>2023-09-29T23:18:00+08:00</published><updated>2023-09-29T23:18:00+08:00</updated><id>https://kunmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86</id><content type="html" xml:base="https://kunmonster.github.io//2023/09/29/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"><![CDATA[<h3 id="正则表达式regular-expression">正则表达式(Regular Expression)</h3>
 <hr />
 
 <h4 id="基础正则basic-regular-expressionbasic-regex">基础正则(Basic Regular Expression—–Basic RegEx)</h4>
