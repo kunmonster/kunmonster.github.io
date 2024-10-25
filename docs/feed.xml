@@ -1,17 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-10-25T21:07:47+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用Matrix-eQTL完成cis-eQTL定位</title><link href="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/" rel="alternate" type="text/html" title="使用Matrix-eQTL完成cis-eQTL定位" /><published>2024-10-25T21:05:00+08:00</published><updated>2024-10-25T21:05:00+08:00</updated><id>https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D</id><content type="html" xml:base="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/"><![CDATA[<h2 id="表达数量性状位点eqtl">表达数量性状位点（eQTL）</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-10-25T21:27:59+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用Matrix-eQTL完成cis-eQTL定位</title><link href="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/" rel="alternate" type="text/html" title="使用Matrix-eQTL完成cis-eQTL定位" /><published>2024-10-25T21:05:00+08:00</published><updated>2024-10-25T21:05:00+08:00</updated><id>https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D</id><content type="html" xml:base="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/"><![CDATA[<h2 id="表达数量性状位点eqtl">表达数量性状位点（eQTL）</h2>
 <hr />
 
-<table>
-  <tbody>
-    <tr>
-      <td>基因组上有些区域能导致某些基因的表达(mRNA)产生明显的变化，这些位置或者区域被称为表达数量性状位点(eQTL)，一般认为离目标基因1Mb位置以内的为顺式位点（local-eQTLs</td>
-      <td> </td>
-      <td>cis-eQTLs），与目标基因位置超过1Mb的成为反式位点（distant-eQTLs</td>
-      <td> </td>
-      <td>trans-eQTLs），主要通过线性回归对兴趣位点与目标基因表达量进行回归，并检验关系是否显著。</td>
-    </tr>
-  </tbody>
-</table>
+<p>基因组上有些区域能导致某些基因的表达(mRNA)产生明显的变化，这些位置或者区域被称为表达数量性状位点(eQTL)，一般认为离目标基因1Mb位置以内的为顺式位点（local-eQTLs ， cis-eQTLs），与目标基因位置超过1Mb的成为反式位点（distant-eQTLs ， trans-eQTLs），主要通过线性回归对兴趣位点与目标基因表达量进行回归，并检验关系是否显著。</p>
 
 <h2 id="使用matrix-eqtl进行大规模eqtl定位">使用Matrix eQTL进行大规模eQTL定位</h2>
 <hr />
