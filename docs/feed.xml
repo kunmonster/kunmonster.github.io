@@ -1,4 +1,348 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-10-25T21:27:59+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用Matrix-eQTL完成cis-eQTL定位</title><link href="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/" rel="alternate" type="text/html" title="使用Matrix-eQTL完成cis-eQTL定位" /><published>2024-10-25T21:05:00+08:00</published><updated>2024-10-25T21:05:00+08:00</updated><id>https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D</id><content type="html" xml:base="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/"><![CDATA[<h2 id="表达数量性状位点eqtl">表达数量性状位点（eQTL）</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-11-16T17:43:12+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">IGV可视化BAM文件帮助理解结构变异</title><link href="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/" rel="alternate" type="text/html" title="IGV可视化BAM文件帮助理解结构变异" /><published>2024-11-16T17:42:00+08:00</published><updated>2024-11-16T17:42:00+08:00</updated><id>https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82</id><content type="html" xml:base="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/"><![CDATA[<p>使用二代测序数据可以检测结构变异，其主要利用insert size与建库时insert size的差异，以及pair-end orientation的异常来检测结构变异。</p>
+
+<h3 id="insert-size">Insert size</h3>
+<hr />
+
+<p>二代测序，需要先将DNA打断成fragment length长的片段，然后加上测序接头，adapter等序列。insert size通常指文库长度，也就是两个reads起点和终点间的长度。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5'                                                  3'
+.....................................................
+		--------&gt;                 &lt;--------
+		  read1                     read2
+		         -----------------
+		          inner distance
+		             gap size 
+		-----------------------------------
+				   insert size  
+-----------------------------------------------------
+				  fragment length
+</code></pre></div></div>
+
+<p>上图分别标注了</p>
+<ul>
+  <li>inner distance(gap size)：两个reads之间的长度</li>
+  <li>insert size：read1起点到read2终点的距离</li>
+  <li>fragment length：insert size + adapter+index序列的长度</li>
+</ul>
+
+<font style="color:red">**‼️思考：为什么两个reads没有重叠呢？**</font>
+
+<p><em>两个read重叠固然会提升该区域测序的准确度，但是这样测序的范围就更小了，如果我们使得两个read隔开，因为是随机打断的，所以中间那段gap size在其他read pair中会出现，这样中间的也被覆盖了，并且测得范围也更大了。</em></p>
+
+<h3 id="pair-orientation">Pair orientation</h3>
+<hr />
+
+<p>与上图read1, read2对应，我们在测序时进行双端测序，那么假设read1方向是从5’—&gt;3’ , 那么read2方向应为3’—&gt;5’,正常情况下都是上述情况，为LR，但是当出现Inversion等变异时候，Pair orientation可能会发生改变，出现LL,RR,RL等情况。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Read1                  Read2
+-------&gt;  gap size &lt;--------
+
+</code></pre></div></div>
+
+<h3 id="异常检测">异常检测</h3>
+<hr />
+<p>通过insert-size异常可以检测</p>
+<ul>
+  <li>insertion (INS 插入)</li>
+  <li>deletion (DEL 删除)</li>
+</ul>
+
+<p>通过pair-end orientation异常可以检测</p>
+<ul>
+  <li>inversion (INV 倒位)</li>
+  <li>inverted duplication (倒位重复)</li>
+  <li>Tandem duplication (DUP 串联重复)</li>
+  <li>Translocation on the same chromosome (TRA 易位)</li>
+</ul>
+
+<h3 id="deletion对应bam文件在igv中可视化的理解">Deletion对应Bam文件在IGV中可视化的理解</h3>
+<hr />
+
+<p>首先我们考虑，如果样本基因组中某区域发生了DEL会产生什么现象</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+
+</span><span class="n">参考基因组</span><span class="w">
+		     </span><span class="n">A</span><span class="w">          </span><span class="n">B</span><span class="w">
+</span><span class="o">---------------------------------------</span><span class="w">
+
+
+</span><span class="n">在样本基因组中</span><span class="p">,</span><span class="n">假设A</span><span class="o">--</span><span class="n">B序列缺失</span><span class="p">,</span><span class="n">那么会有一对pair</span><span class="o">-</span><span class="n">end</span><span class="p">,</span><span class="n">read1在A的左边</span><span class="p">,</span><span class="n">read2在B右边</span><span class="p">,</span><span class="n">这一对reads比对到参考基因组的时候</span><span class="p">,</span><span class="n">产生的insert</span><span class="w"> </span><span class="n">size将大于对样本建库时的insert</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="n">因为在样本中他们已经是紧邻着的了</span><span class="p">,</span><span class="n">但是在参考基因组中他们中间相隔了一个AB序列.</span><span class="w">
+
+</span><span class="n">比对到参考基因组</span><span class="w">
+			 </span><span class="n">A</span><span class="w">          </span><span class="n">B</span><span class="w">
+</span><span class="o">-------------|</span><span class="err">··········</span><span class="o">|--------------</span><span class="w">
+</span><span class="o">-------------</span><span class="w">   </span><span class="n">直接相连</span><span class="w">  </span><span class="o">--------------</span><span class="w">
+	   </span><span class="o">----&gt;</span><span class="w">              </span><span class="o">&lt;----</span><span class="w">
+       </span><span class="n">read1</span><span class="w">              </span><span class="n">read2</span><span class="w">
+       </span><span class="o">------------------------</span><span class="w">
+        </span><span class="n">样本中的reads</span><span class="o">-</span><span class="n">pair比对到</span><span class="w">
+        </span><span class="n">参考基因组的insert</span><span class="w"> </span><span class="n">size</span><span class="w">
+
+
+</span><span class="n">样本基因组比该片段要比上图的参考基因组短一点</span><span class="p">,</span><span class="w">
+</span><span class="o">---------------------------</span><span class="w">
+	</span><span class="o">----&gt;</span><span class="w">   </span><span class="o">&lt;----</span><span class="w">
+    </span><span class="n">read1</span><span class="w">   </span><span class="n">read2</span><span class="w">
+    </span><span class="o">-------------</span><span class="w">
+     </span><span class="n">insert</span><span class="w"> </span><span class="n">size</span><span class="w">
+
+
+</span><span class="n">很明显样本中的reads</span><span class="o">-</span><span class="n">pair比对到参考基因组产生的insert</span><span class="w"> </span><span class="n">size大于该样本建库时的insert</span><span class="w"> </span><span class="n">size或者说预期的insert</span><span class="w"> </span><span class="n">size</span><span class="w">
+
+</span></code></pre></div></div>
+
+<p>下面是一个DEL的例子，接下来看BAM文件在IGV中的展示</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">CHROM</th>
+      <th style="text-align: center">POS</th>
+      <th style="text-align: center">ID</th>
+      <th style="text-align: center">REF</th>
+      <th style="text-align: center">ALT</th>
+      <th style="text-align: center">QUAL</th>
+      <th style="text-align: center">FILTER</th>
+      <th style="text-align: center">INFO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">NC_037328.1</td>
+      <td style="text-align: center">1895458</td>
+      <td style="text-align: center">9784</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">&lt;DEL&gt;</td>
+      <td style="text-align: center">14942</td>
+      <td style="text-align: center">PASS</td>
+      <td style="text-align: center">CIEND=0,0;CIPOS=-2,0;CHR2=NC_037328.1;END=1895994;SVLEN=-536;········</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202411151719562.png" alt="image.png" /></p>
+
+<ul>
+  <li>
+    <p>注意上图中蓝色箭头，在蓝色箭头处reads覆盖度发生了明显变化，再看下面红色的reads,这些就是insert size出现异常的reads</p>
+  </li>
+  <li>红色表示，比对到参考基因组的insert size大于建库时预期的insert size,也就是上文提到的DEL会出现的情况</li>
+  <li>中间样本除了红色reads,还有正常的Reads,覆盖了该区域，说明该样本只是部分变异，可以认为其一条染色体发生了该DEL，但是另一条并没有发生</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202411152233830.png" alt="{375849B0-AAA2-4C69-AF38-C3935C10C95F}.png" /></p>
+
+<p>如上图，随即点开一个标记为红色的read-pair,可以看到其insert size为844，但是建库时为300-500bp，显然这个insert size大于建库的insert size,那么判断发生了缺失</p>
+
+<h3 id="insertion在bam文件中体现">Insertion在bam文件中体现</h3>
+<hr />
+
+<p>同上面的DEL一样， 首先考虑，如果样本基因组中产生了INS会出现什么现象</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+                </span><span class="o">|</span><span class="w">
+</span><span class="o">-------------------------------</span><span class="w">    </span><span class="n">参考基因组</span><span class="w"> 
+
+
+</span><span class="o">--------------</span><span class="err">······</span><span class="o">---------------</span><span class="w">  </span><span class="n">样本基因组</span><span class="p">,</span><span class="n">中间部分发生了插入</span><span class="w">
+	  </span><span class="o">------&gt;</span><span class="w">        </span><span class="o">&lt;------</span><span class="w">
+	   </span><span class="n">read1</span><span class="w">          </span><span class="n">read2</span><span class="w">          </span><span class="n">样本基因组建库测序产生</span><span class="w">
+	  </span><span class="o">----------------------</span><span class="w">
+	       </span><span class="n">insert</span><span class="w"> </span><span class="n">size</span><span class="w">
+	       
+</span><span class="n">但是我们要比对到的是参考基因组</span><span class="err">，</span><span class="n">由于参考基因组中没有中间插入的一段</span><span class="err">，</span><span class="n">所以将会造成以下结果</span><span class="w">
+                </span><span class="o">|</span><span class="w">
+</span><span class="o">-------------------------------</span><span class="w">    </span><span class="n">参考基因组</span><span class="w"> 
+	     </span><span class="o">------&gt;</span><span class="w"> </span><span class="o">&lt;------</span><span class="w">
+	      </span><span class="n">read1</span><span class="w">   </span><span class="n">read2</span><span class="w">          
+	     </span><span class="o">---------------</span><span class="w">
+	    </span><span class="n">比对产生insert</span><span class="w"> </span><span class="n">size</span><span class="w">    
+	    
+</span><span class="n">很显然</span><span class="p">,</span><span class="n">来自样本中的reads比对到参考基因组时</span><span class="p">,</span><span class="n">比对产生的insert</span><span class="w"> </span><span class="n">size明显小于建库时的预期</span><span class="err">，</span><span class="n">推断此处发生了插入</span><span class="w">
+</span></code></pre></div></div>
+
+<p>下面是一个例子</p>
+
+<p>vcf记录</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">CHROM</th>
+      <th style="text-align: center">POS</th>
+      <th style="text-align: center">ID</th>
+      <th style="text-align: center">REF</th>
+      <th style="text-align: center">ALT</th>
+      <th style="text-align: center">QUAL</th>
+      <th style="text-align: center">FILTER</th>
+      <th style="text-align: center">INFO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">NC_037329.1</td>
+      <td style="text-align: center">120047817</td>
+      <td style="text-align: center">NC_037329.1:120047817:IG</td>
+      <td style="text-align: center">T</td>
+      <td style="text-align: center">TGAACCCACATGTGTGATAGATGGTACA</td>
+      <td style="text-align: center">8962</td>
+      <td style="text-align: center">PASS</td>
+      <td style="text-align: center">ABHet=0.542;ABHom=0.9893;AC=46;AF=0.4259;···</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202411161128117.png" alt="image.png" /></p>
+
+<p>图中表示了一个27bp的插入，序列如图，并且能观察到该区域比对产生的insert size为212。显然，建库时我们预期为300-500bp显然更小，说明上述比对insert size &lt; 建库insert szie时可能显示有插入发生，是合理的</p>
+
+<font style="color:red"> ** !! 注意:** *这种方式能检测插入的长度是有限的,当建库测序的inesrt size长度不足以覆盖整个插入片段以及两条reads时，那么read2将会有一部分在插入序列里面,此时比对，read2将会无法比对上,或者部分比对，此时没办法判断是因为read质量低还是插入或者其他情况造成的。*</font>
+
+<h3 id="inversion-倒位">Inversion-倒位</h3>
+<hr />
+
+<p>倒位，指一个片段的DNA在原位置方向发生颠倒，下面看一下如果发生了倒位，比对到参考基因组将会发生什么事情</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">           </span><span class="n">A</span><span class="w">                         </span><span class="n">B</span><span class="w">  
+</span><span class="o">---------------------------------------------</span><span class="w">  </span><span class="n">参考基因组</span><span class="w">
+
+
+           </span><span class="n">B</span><span class="w">                         </span><span class="n">A</span><span class="w">  
+</span><span class="o">---------------------------------------------</span><span class="w">  </span><span class="n">样本基因组</span><span class="w">
+
+
+</span><span class="n">在样本基因组中</span><span class="p">,</span><span class="n">AB段序列与参考基因组相比发生了颠倒</span><span class="p">,</span><span class="n">但是我们不清楚</span><span class="p">,</span><span class="n">正常建库测序</span><span class="p">,</span><span class="n">假设我们在样本基因组中有以下测序片段</span><span class="w">
+
+
+           </span><span class="n">B</span><span class="w">                         </span><span class="n">A</span><span class="w">  
+</span><span class="o">---------------------------------------------</span><span class="w">  </span><span class="n">样本基因组</span><span class="w">
+   </span><span class="o">------&gt;</span><span class="w">   </span><span class="o">&lt;------</span><span class="w">           
+   </span><span class="n">readB</span><span class="m">-1</span><span class="w">   </span><span class="n">readB</span><span class="m">-2</span><span class="w">
+                            </span><span class="o">------&gt;</span><span class="w">     </span><span class="o">&lt;------</span><span class="w">
+                            </span><span class="n">readA</span><span class="m">-1</span><span class="w">     </span><span class="n">readA</span><span class="m">-2</span><span class="w">
+
+
+</span><span class="n">现在将上述测序reads比对到参考基因组</span><span class="p">,</span><span class="n">将会发生什么呢</span><span class="o">?</span><span class="w">
+
+           </span><span class="n">A</span><span class="w">                         </span><span class="n">B</span><span class="w">  
+</span><span class="o">---------------------------------------------</span><span class="w">  </span><span class="n">参考基因组</span><span class="w">
+   </span><span class="o">------&gt;</span><span class="w">   </span><span class="o">&lt;------</span><span class="w">           
+   </span><span class="n">readB</span><span class="m">-1</span><span class="w">   </span><span class="n">readA</span><span class="m">-1</span><span class="w">
+                            </span><span class="o">------&gt;</span><span class="w">     </span><span class="o">&lt;------</span><span class="w">
+                            </span><span class="n">readB</span><span class="m">-2</span><span class="w">     </span><span class="n">readA</span><span class="m">-2</span><span class="w">
+
+</span><span class="n">可以看到</span><span class="p">,</span><span class="n">在AB序列内部的reads</span><span class="p">,</span><span class="n">比对的方向居然和其配对的reads方向一致</span><span class="err">，</span><span class="n">也就是出现了LL</span><span class="p">,</span><span class="n">RR类型</span><span class="err">，</span><span class="n">指示可能发生了倒位</span><span class="err">。</span><span class="w">
+
+
+
+</span></code></pre></div></div>
+
+<font style="color:red"> ** !! 注意:** *只有当一对reads一半在倒位序列内部，一半在倒位序列外部的时候，才会出现这种异常.
+*</font>
+
+<h3 id="invert-duplication-倒位重复">Invert Duplication-倒位重复</h3>
+<hr />
+
+<p>倒位重复：指一小段序列在基因组上另一个位置发生了倒位并且插入进该位置</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">       </span><span class="n">A</span><span class="w">            </span><span class="n">B</span><span class="w">           
+</span><span class="o">------------------------------------</span><span class="w"> </span><span class="n">参考基因组</span><span class="w">
+
+       </span><span class="n">A</span><span class="w">            </span><span class="n">B</span><span class="w">               </span><span class="n">B</span><span class="w">            </span><span class="n">A</span><span class="w">
+</span><span class="o">-----------------------------------------------------</span><span class="w"> </span><span class="n">样本基因组</span><span class="w">
+
+
+</span><span class="n">在样本基因组中AB片段在另一个位置发生了倒位重复</span><span class="p">,</span><span class="n">我们对样本基因组进行建库测序</span><span class="w">
+
+
+       </span><span class="n">A</span><span class="w">            </span><span class="n">B</span><span class="w">               </span><span class="n">B</span><span class="s1">'            A'</span><span class="w">
+</span><span class="o">------------------------------------------------------</span><span class="w"> </span><span class="n">样本基因组</span><span class="w">
+ </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">
+ </span><span class="n">readA1</span><span class="w">  </span><span class="n">readA2</span><span class="w">
+              </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">   </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">
+              </span><span class="n">readB1</span><span class="w">  </span><span class="n">readB2</span><span class="w"> </span><span class="n">readB</span><span class="s1">'1  readB'</span><span class="m">2</span><span class="w">
+
+                                            </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">
+                                           </span><span class="n">readA</span><span class="s1">'1  readA'</span><span class="m">2</span><span class="w">
+
+</span><span class="n">将上述reads比对到参考基因组</span><span class="p">,</span><span class="n">将会发生什么呢</span><span class="o">?</span><span class="w">
+
+       </span><span class="n">A</span><span class="w">            </span><span class="n">B</span><span class="w">           
+</span><span class="o">--------------------------------------------------</span><span class="w"> </span><span class="n">参考基因组</span><span class="w">
+ </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">
+ </span><span class="n">readA1</span><span class="w">  </span><span class="n">readA2</span><span class="w">
+              </span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">   </span><span class="o">----&gt;</span><span class="w">                 </span><span class="o">&lt;----</span><span class="w">
+             </span><span class="n">readB1</span><span class="w">   </span><span class="n">readB2</span><span class="w">  </span><span class="n">readB</span><span class="s1">'1               readA'</span><span class="m">2</span><span class="w">                               </span><span class="o">----&gt;</span><span class="w">
+             </span><span class="n">readB</span><span class="s1">'2
+         &lt;----
+         readA'</span><span class="m">1</span><span class="w">
+
+</span><span class="n">因为在样本基因组中有两段这个区域</span><span class="err">，</span><span class="n">所以比对后AB段的coverage</span><span class="p">(</span><span class="n">覆盖度</span><span class="p">)</span><span class="n">应该会有明显上升</span><span class="err">，</span><span class="n">IGV官方文档说会有大量的左右read重叠</span><span class="err">？</span><span class="n">有待考证</span><span class="err">···</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="tandem-duplication-串联重复">Tandem duplication-串联重复</h3>
+<hr />
+
+<p>串联重复: 在一段序列后面紧跟着重复该片段</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">       </span><span class="n">A</span><span class="w">              </span><span class="n">B</span><span class="w">
+</span><span class="o">-----------------------------------</span><span class="w">   </span><span class="n">参考基因组</span><span class="w">
+
+       </span><span class="n">A</span><span class="w">              </span><span class="n">B</span><span class="w">
+</span><span class="o">------------------------------------------------------------</span><span class="w"> </span><span class="n">样本基因组</span><span class="w">
+                      </span><span class="n">A</span><span class="w">              </span><span class="n">B</span><span class="w">
+		         </span><span class="o">---&gt;</span><span class="err">···</span><span class="o">&lt;---</span><span class="w">
+				</span><span class="n">read1</span><span class="w">   </span><span class="n">read2</span><span class="w">
+
+</span><span class="n">上述样本基因组发生了AB序列串联重复</span><span class="p">,</span><span class="n">对其进行建库测序</span><span class="p">,</span><span class="n">再比对到参考基因组</span><span class="w">
+
+       </span><span class="n">A</span><span class="w">              </span><span class="n">B</span><span class="w">
+</span><span class="o">-----------------------------------</span><span class="w">   </span><span class="n">参考基因组</span><span class="w">
+		</span><span class="o">&lt;---</span><span class="w">       </span><span class="o">---&gt;</span><span class="w">
+		</span><span class="n">read2</span><span class="w">	   </span><span class="n">read1</span><span class="w">
+
+</span><span class="n">很显然read2本来应该再read1下游位置</span><span class="err">，</span><span class="n">但是跑到了上游</span><span class="p">,</span><span class="n">但是方向未变</span><span class="w">
+</span><span class="n">IGV文档中没提到</span><span class="p">,</span><span class="n">这个位置的coverage应该也会上升</span><span class="w">
+
+</span></code></pre></div></div>
+
+<h3 id="-translocation-on-the-same-chromosome-易位">### Translocation on the same chromosome-易位</h3>
+<hr />
+
+<p>同染色体易位: 染色体上的某一段序列，从原位置移动到该染色体的另一位置</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">      </span><span class="n">A</span><span class="w">                </span><span class="n">B</span><span class="w">    
+</span><span class="o">-------------------------------------------------------------</span><span class="w"> </span><span class="n">参考基因组</span><span class="w">
+
+
+                                      </span><span class="n">A</span><span class="w">                </span><span class="n">B</span><span class="w">    
+</span><span class="o">-------------------------------------------------------------</span><span class="w"> </span><span class="n">样本基因组</span><span class="w">
+								</span><span class="o">----&gt;</span><span class="err">···</span><span class="o">&lt;----</span><span class="w">
+								</span><span class="n">read1</span><span class="w">   </span><span class="n">read2</span><span class="w">
+
+</span><span class="n">上述样本基因组出现了同染色体易位变异</span><span class="p">,</span><span class="n">对其进行建库测序</span><span class="p">,</span><span class="n">再比对到参考基因组</span><span class="w">
+
+
+      </span><span class="n">A</span><span class="w">                </span><span class="n">B</span><span class="w">    
+</span><span class="o">-------------------------------------------------------------</span><span class="w"> </span><span class="n">参考基因组</span><span class="w">
+		</span><span class="o">&lt;----</span><span class="w">				    </span><span class="o">----&gt;</span><span class="w">
+		</span><span class="n">read2</span><span class="w">					</span><span class="n">read1</span><span class="w">
+
+</span><span class="n">可以观察到</span><span class="p">,</span><span class="n">测序产生reads比对到参考基因组后read1正常比对到原来的位置</span><span class="p">,</span><span class="n">但是配对的read2比对到了AB区间内</span><span class="p">,</span><span class="n">但是检测易位真是通过这个吗</span><span class="o">?</span><span class="w"> 
+
+</span><span class="o">@</span><span class="n">TODO</span><span class="o">:</span><span class="n">研究一下calling</span><span class="w"> </span><span class="n">sv的原理</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="end">End</h3>
+<hr />
+
+<p>以上内容来自本人对IGV中可视化bam文件部分的理解,因为似乎没有在互联网上找到相关的信息，直接从reads角度来看SV有助于更好理解结构变异的calling过程!</p>
+
+<h3 id="reference">Reference</h3>
+
+<p><a href="https://igv.org/doc/desktop/#UserGuide/tracks/alignments/paired_end_alignments/#inverted-duplication">IGV paired-end alignments</a></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="IGV" /><category term="BAM" /><summary type="html"><![CDATA[使用二代测序数据可以检测结构变异，其主要利用insert size与建库时insert size的差异，以及pair-end orientation的异常来检测结构变异。]]></summary></entry><entry><title type="html">使用Matrix-eQTL完成cis-eQTL定位</title><link href="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/" rel="alternate" type="text/html" title="使用Matrix-eQTL完成cis-eQTL定位" /><published>2024-10-25T21:05:00+08:00</published><updated>2024-10-25T21:05:00+08:00</updated><id>https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D</id><content type="html" xml:base="https://kunmonster.github.io//2024/10/25/%E4%BD%BF%E7%94%A8Matrix-eQTL%E5%AE%8C%E6%88%90cis-eQTL%E5%AE%9A%E4%BD%8D/"><![CDATA[<h2 id="表达数量性状位点eqtl">表达数量性状位点（eQTL）</h2>
 <hr />
 
 <p>基因组上有些区域能导致某些基因的表达(mRNA)产生明显的变化，这些位置或者区域被称为表达数量性状位点(eQTL)，一般认为离目标基因1Mb位置以内的为顺式位点（local-eQTLs ， cis-eQTLs），与目标基因位置超过1Mb的成为反式位点（distant-eQTLs ， trans-eQTLs），主要通过线性回归对兴趣位点与目标基因表达量进行回归，并检验关系是否显著。</p>
