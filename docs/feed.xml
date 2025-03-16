@@ -1,4 +1,135 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2024-11-16T17:46:01+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">IGV可视化BAM文件帮助理解结构变异</title><link href="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/" rel="alternate" type="text/html" title="IGV可视化BAM文件帮助理解结构变异" /><published>2024-11-16T17:42:00+08:00</published><updated>2024-11-16T17:42:00+08:00</updated><id>https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82</id><content type="html" xml:base="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/"><![CDATA[<p>使用二代测序数据可以检测结构变异，其主要利用insert size与建库时insert size的差异，以及pair-end orientation的异常来检测结构变异。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-03-16T17:13:03+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">DeepsvFilter:基于深度学习完成结果变异过滤</title><link href="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/" rel="alternate" type="text/html" title="DeepsvFilter:基于深度学习完成结果变异过滤" /><published>2025-03-16T17:11:00+08:00</published><updated>2025-03-16T17:11:00+08:00</updated><id>https://kunmonster.github.io//2025/03/16/DeepsvFilter:%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4</id><content type="html" xml:base="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/"><![CDATA[<p>最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。</p>
+
+<h2 id="introduction">Introduction</h2>
+<hr />
+<p>发表期刊：Briefings in Bioinformatics
+发表时间：2021年
+作者：Yongzhuang liu等
+原文链接：<a href="https://doi.org/10.1093/bib/bbaa370">A deep learning approach for filtering structural variants in short read sequencing data</a></p>
+
+<p>摘要</p>
+
+<blockquote>
+  <p>随着基因组测序数据的成本下降、越来越多的测序数据用于基因组研究包括基因组结构变异研究，在人类基因组中广泛应用，但是由于二代重测序数据的局限性，假阳性的结果很多，所以需要合适的变异过滤措施来保证变异的准确性。</p>
+</blockquote>
+
+<h2 id="研究背景">研究背景</h2>
+<hr />
+
+<ol>
+  <li>二代测序的固有缺点导致结构变异检测结果中假阳性数量居高不下</li>
+  <li>过滤假阳性变异的参数难以指定，不同数据集有不同的特征，所以每个数据集的过滤参数难以指定</li>
+  <li>手动将bam文件可视化并查看结构变异区域bam文件支持度的方式效率太低，并且全基因组范围一般有成千上万个结构变异，手动查看比对文件太慢</li>
+  <li>监督学习方法已经广泛应用于检测基因组或外显子变异，多数工具都将该类任务转换成分类任务，使用神经网络来解决</li>
+</ol>
+
+<ul>
+  <li>作者列举了一些使用深度学习来解决基因组变异问题的例子</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">软件</th>
+      <th style="text-align: center">解决问题</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">forestSV,SV</td>
+      <td style="text-align: center">使用read alignment通过随机森林和支持向量机检测SV</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">DeepVariant</td>
+      <td style="text-align: center">使用read alignment 通过将比对和相关信息encode成图片使用神经网络检测Indels,SNVs</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">CNNScore Variants</td>
+      <td style="text-align: center">使用神经网络过滤SNP,INDEL</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Clairvoyant</td>
+      <td style="text-align: center">将SNVs和INDELs的检测转化成多分类任务</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="核心问题提取">核心问题提取</h2>
+<hr />
+<p>从简介中可以了解到，此文章重点在于基因组结构变异的过滤，通过对背景以及简介部分的精炼大概可以提取出以下关键问题</p>
+
+<ol>
+  <li>
+    <p>怎么将SVs的过滤转换成分类问题？</p>
+  </li>
+  <li>
+    <p>怎么获取高质量的训练数据？</p>
+  </li>
+  <li>
+    <p>怎么将变异数据编码成适合神经网络训练的数据？</p>
+  </li>
+  <li>
+    <p>选用什么样的模型？</p>
+  </li>
+</ol>
+
+<h2 id="思路方法">思路方法</h2>
+
+<hr />
+
+<p>作者仅考虑100bp以上的结构变异，因为50～100bp的变异对于二代测序数据来说，还是能准确的检测出来的。并且其选择将不同的变异类型分开，这样做也有一定道理，不同变异类型肯定有不同的特征，分开来提取特征或许更好，如果一起来提取那么获取到的特征可能没那么准确。</p>
+
+<h3 id="数据准备">数据准备</h3>
+
+<ul>
+  <li>训练数据的获取</li>
+</ul>
+
+<p>该研究使用GIAB的HG002样本的60X WGS数据（已经使用NovoAlign 比对到hs37d5）以及 NA12878 （50X） 作为训练数据，其使用Lumpy,Delly,Manta分别对该样本检测结构变异（排除着丝粒和中心粒区域），如果使用这三种工具找到的结构变异与GIAB中的某个变异有90%以上的重叠，那么就列为Positive样本，否则列为Negative样本，随后将每个SV断点编码成一张3通道的图片，具体方法后述，将这些标记图片的90%用于训练，10%用于验证。</p>
+
+<ul>
+  <li>预测数据</li>
+</ul>
+
+<p>与准备训练数据一致，使用三种不同的工具检测变异，对于DELs,DUPs,INVs,如果三个工具的结果中有90%以上的相互重叠那么当成一个变异，对于INS，如果三个结果中某一个INS他们的断点在上下游100bp内，那么当成同一个变异，然后生成SV image，交给训练好的模型进行预测。</p>
+
+<ul>
+  <li>SV图片生成</li>
+</ul>
+
+<p>对于非INS类型变异，其将两个断点扩展成两个范围 ： $[x-\alpha , x+\alpha]$ , $[y - \alpha,y + \alpha]$ , 其中 $\alpha$ 是模型超参数下，对于不同的模型，设置为149或者112；对于INS类型变异，因为只有一个“断点”，那么只对该点进行上述操作。</p>
+
+<p>对于每个断点，提取上述范围内的RD（Read depth）,SR（Split Reads）,DRP（discordant reads pairs）的信息形成三个通道，并且限制每个位点覆盖的reads数目不超过149,112,那么每个图片的形状为 $299 * 149$ 或者 $224 * 112$。 这个形状怎么来的呢，即以断点为中心，上下游指定范围内，覆盖这个范围的reads的三种信息将会被编码，每行对应一个reads。</p>
+
+<p>针对RD通道，如果位点被某reads覆盖，那么该像素填充为255，如果没被覆盖则填充0</p>
+
+<p>针对SR通道，如果该位点在某个Reads发生split read，那么填充为255，反之为0</p>
+
+<p>针对DRP通道，如果该位点的reads被标记为discordant那么填充255，反之为0（该研究对discordant有具体描述，见原文Method部分）</p>
+
+<p>如果一个断点的范围覆盖了配对的另一个断点，那么对这两个断点仍然生成两张图像。忽略掉左断点中覆盖了右断点的SRs和DRPs，同理右断点忽略左断点的SRs和DRPs。最后将DRPs和SRs信息放在图像顶部 ？（疑惑中……）</p>
+
+<p>完成一个SV的两张图片的生成后，在垂直方向上将两张图concat起来，形成一张，表示该SV。</p>
+
+<ul>
+  <li>数据增强</li>
+</ul>
+
+<p>作者对typical true sv(样本中左右断点的距离和ground truth set中左右断点的距离不超过158bp) ， Typical false sv(与前者相反，超过了158bp)进行数据增强（水平翻转，垂直翻转）以扩展训练数据集。</p>
+
+<p>真正准备训练数据时，只准备了DEL,DUP类型数据，并且分开准备的，DEL类型直接使用上述方法，取工具与GIAB中重合的部分，但是DUP类型，直接使用两个工具都得出的相同位点为POSTIVE SV（个人绝对不妥，但是迫于没有ground truth data）</p>
+
+<p>最后90%的图片用于训练，10%的图片用于训练时验证。</p>
+
+<h3 id="模型选择与训练">模型选择与训练</h3>
+
+<p>该研究使用迁移学习，使用Inception-ResNet V2 , MobileNet v1 , NASNet-A Mobile , PNASNet-5 Mobile模型，每个batch为16张SV图片，训练轮数为13轮，动态调整学习率。</p>
+
+<p>PS: 本文只用作学习笔记，我更多关注数据以及方法部分，后续作者对各个模型的结果进行了比较，如有兴趣请查看原文。</p>
+
+<p>参考</p>
+
+<p><a href="https://doi.org/10.1093/bib/bbaa370">A deep learning approach for filtering structural variants in short read sequencing data</a></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="paper" /><category term="SV" /><summary type="html"><![CDATA[最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。]]></summary></entry><entry><title type="html">IGV可视化BAM文件帮助理解结构变异</title><link href="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/" rel="alternate" type="text/html" title="IGV可视化BAM文件帮助理解结构变异" /><published>2024-11-16T17:42:00+08:00</published><updated>2024-11-16T17:42:00+08:00</updated><id>https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82</id><content type="html" xml:base="https://kunmonster.github.io//2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/"><![CDATA[<p>使用二代测序数据可以检测结构变异，其主要利用insert size与建库时insert size的差异，以及pair-end orientation的异常来检测结构变异。</p>
 
 <h3 id="insert-size">Insert size</h3>
 <hr />
