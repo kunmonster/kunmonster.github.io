@@ -1,4 +1,164 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-03-16T17:13:03+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">DeepsvFilter:基于深度学习完成结果变异过滤</title><link href="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/" rel="alternate" type="text/html" title="DeepsvFilter:基于深度学习完成结果变异过滤" /><published>2025-03-16T17:11:00+08:00</published><updated>2025-03-16T17:11:00+08:00</updated><id>https://kunmonster.github.io//2025/03/16/DeepsvFilter:%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4</id><content type="html" xml:base="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/"><![CDATA[<p>最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-04-11T20:30:53+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用SV完成主成分分析</title><link href="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/" rel="alternate" type="text/html" title="使用SV完成主成分分析" /><published>2025-04-11T20:30:00+08:00</published><updated>2025-04-11T20:30:00+08:00</updated><id>https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/"><![CDATA[<p>主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。</p>
+
+<p>在群体基因组中，我们经常使用PCA来查看群体间的关系，以及群体内分层的现象等，大部分时间都是使用SNP来进行分析，也就是各群体间共有的SNP位点，对他们的基因型进行主成分分析。</p>
+
+<p>本文将使用结构变异(Structural variation)进行主成分分析。</p>
+
+<h2 id="数据准备">数据准备</h2>
+<hr />
+
+<p>在进行主成分分析之前，我们需要准备一个VCF文件，其中包含每个变异的相关信息，以及每个样本的基因型信息。</p>
+
+<p>这里有个小坑，我的结构变异是分群体进行calling的，需要先得到群体间的公共位点才行，但是结构变异的断点本身就是不准确的，所以这一步还是很困难的。</p>
+
+<p>我的处理步骤如下：</p>
+
+<ol>
+  <li>提取每个群体的位点</li>
+</ol>
+
+<p>对每个群体提取所有变异位点，包含染色体号和变异起始位置</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS\n'</span> your_vcf_file_1 | <span class="nb">sort</span> <span class="nt">-V</span> <span class="nt">-k1</span>,1 <span class="nt">-k2</span>,2n <span class="o">&gt;</span> site1.list
+bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS\n'</span> your_vcf_file_2 | <span class="nb">sort</span> <span class="nt">-V</span> <span class="nt">-k1</span>,1 <span class="nt">-k2</span>,2n <span class="o">&gt;</span> site2.list
+bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS\n'</span> your_vcf_file_3 | <span class="nb">sort</span> <span class="nt">-V</span> <span class="nt">-k1</span>,1 <span class="nt">-k2</span>,2n <span class="o">&gt;</span> site3.list
+</code></pre></div></div>
+
+<p><em>注意：上面命令中sort -V是按自然顺序排序，如果你文件中的染色体名是有英文字母的，如NCBI的NCxxxxx那么可以使用，如果你的染色体名字直接是数字那么就不需要加该选项</em></p>
+
+<ol>
+  <li>计算群体的共有位点</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nb">awk</span> <span class="s1">'NR==FNR {pos[$0]; next} ($0 in pos)'</span> site1.list site2.list site3.list <span class="o">&gt;</span> common.list
+
+</code></pre></div></div>
+
+<ol>
+  <li>提取每个群体共有位点的变异</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+bcftools view <span class="nt">-T</span> common.list <span class="nt">-O</span> z <span class="nt">-o</span> population_1.vcf.gz vcf_1
+bcftools view <span class="nt">-T</span> common.list <span class="nt">-O</span> z <span class="nt">-o</span> population_2.vcf.gz vcf_2
+bcftools view <span class="nt">-T</span> common.list <span class="nt">-O</span> z <span class="nt">-o</span> population_3.vcf.gz vcf_3
+
+</code></pre></div></div>
+
+<ol>
+  <li>使用bcftools进行合并（同时使用bcftools计算出AF,MAF,MISSING RATE）</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+bcftools merge population_1.vcf.gz population_2.vcf.gz population_3.vcf.gz <span class="nt">-O</span> z <span class="nt">-o</span> common_var.vcf.gz
+
+bcftools +fill-tags common_var.vcf.gz <span class="nt">--</span> <span class="nt">-t</span> AF | bcftools +fill-tags <span class="nt">--</span> <span class="nt">-t</span> MAF | bcftools +fill-tags <span class="nt">-O</span> z <span class="nt">-o</span> common_var_with_info.vcf.gz <span class="nt">--</span> <span class="nt">-t</span> F_MISSING
+
+</code></pre></div></div>
+
+<ol>
+  <li>将vcf文件中的ALT字段全部替换成PLINK可接受的输入</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c"># 此处假设vcf文件中ALT字段为&lt;xxxxx&gt;类型</span>
+<span class="c"># 使用sed替换</span>
+
+bcftools view common_var_with_info.vcf.gz | <span class="nb">sed</span> <span class="nt">-E</span> <span class="s1">'/^#/! s/&lt;[^&gt;]+&gt;/SV/g'</span> <span class="o">&gt;</span> common_var_with_info.vcf
+
+bgzip common_var_with_info.vcf
+tabix common_var_with_info.vcf.gz
+
+</code></pre></div></div>
+
+<ol>
+  <li>将vcf文件转换成PLINK的标准输入（使用PLINK2）</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>plink2 <span class="nt">--vcf</span> common_var_with_info.vcf.gz <span class="se">\</span>
+<span class="nt">--geno</span> 0.05 <span class="se">\ </span>  <span class="c"># 每个变异的missing rate &lt; 5%</span>
+<span class="nt">--maf</span> 0.05 <span class="se">\ </span>   <span class="c"># 每个变异maf &gt; 0.05</span>
+<span class="nt">--hwe</span> 1e-6 <span class="se">\ </span>   <span class="c"># 满足哈代温伯格平衡</span>
+<span class="nt">--freq</span> <span class="se">\ </span>       <span class="c"># 加载基因型频率</span>
+<span class="nt">--allow-extra-chr</span> <span class="se">\ </span><span class="c"># 由于我使用NCBI refseq的染色体ID,所以加上该选项,如果是数字染色体名则不需要</span>
+<span class="nt">--make-bed</span> <span class="se">\</span>
+<span class="nt">--out</span> plink/plink_input <span class="c"># 将结果存放到plink目录下,结果文件以plink_input为前缀</span>
+</code></pre></div></div>
+
+<h2 id="主成分分析及可视化">主成分分析及可视化</h2>
+<hr />
+
+<p>在将数据转换成PLINK标准输入后，使用PLINK继续进行主成分分析，并且使用R以及ggplot2包进行可视化。</p>
+
+<ol>
+  <li>计算主成分</li>
+</ol>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+plink2 <span class="nt">--bfile</span> plink_input <span class="nt">--pca</span> 10 <span class="nt">-out</span> pca_res
+
+</code></pre></div></div>
+
+<p>计算主成分后将会获得两个文件</p>
+
+<ul>
+  <li>pca_res.eigenval （每个主成分的比例，无表头）</li>
+  <li>pca_res.eigenvec（样本为行，主成分为列，有表头）</li>
+</ul>
+
+<ol>
+  <li>进行可视化</li>
+</ol>
+
+<p>将上述两个文件，使用R打开，注意，我这里有三个群体，还需要手动在pca_res.eigenvec中加一下群体信息</p>
+
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">eigenvec</span><span class="o">&lt;-</span><span class="n">read.csv</span><span class="p">(</span><span class="s1">'pca_res.eigenvec'</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"\t"</span><span class="p">)</span><span class="w">
+
+</span><span class="n">eigenval</span><span class="o">&lt;-</span><span class="n">read.table</span><span class="p">(</span><span class="s2">"pca_res.eigenval"</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+
+
+
+</span><span class="c1"># 去掉第一列并加上分组信息</span><span class="w">
+
+</span><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+</span><span class="n">eigenvec</span><span class="o">&lt;-</span><span class="n">mutate</span><span class="p">(</span><span class="n">eigenvec</span><span class="p">[</span><span class="m">-1</span><span class="p">],</span><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="n">IID</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+
+</span><span class="n">pca_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="w">
+  </span><span class="n">Sample</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigenvec</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="c1"># 第一列样本信息</span><span class="w">
+  </span><span class="n">Group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">eigenvec</span><span class="o">$</span><span class="n">group</span><span class="p">),</span><span class="w">
+  </span><span class="n">PC1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigenvec</span><span class="p">[,</span><span class="w"> </span><span class="m">2</span><span class="p">],</span><span class="w"> </span><span class="c1"># 主成分1</span><span class="w">
+  </span><span class="n">PC2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eigenvec</span><span class="p">[,</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w">  </span><span class="c1"># 主成分2</span><span class="w">
+</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># 计算方差解释比例</span><span class="w">
+</span><span class="n">var_explained</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">eigenval</span><span class="o">$</span><span class="n">V1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">eigenval</span><span class="o">$</span><span class="n">V1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="w">
+
+</span><span class="n">library</span><span class="p">(</span><span class="s1">'ggplot2'</span><span class="p">)</span><span class="w">
+</span><span class="c1"># 绘制PCA图</span><span class="w">
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">pca_data</span><span class="p">,</span><span class="w"> </span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PC1</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PC2</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Group</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_point</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.7</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">labs</span><span class="p">(</span><span class="w">
+    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"PC1 ("</span><span class="p">,</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">var_explained</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="s2">"%)"</span><span class="p">),</span><span class="w">
+    </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"PC2 ("</span><span class="p">,</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">var_explained</span><span class="p">[</span><span class="m">2</span><span class="p">],</span><span class="w"> </span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="s2">"%)"</span><span class="p">),</span><span class="w">
+
+  </span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">stat_ellipse</span><span class="p">(</span><span class="n">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.95</span><span class="p">,</span><span class="w"> </span><span class="n">linetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="c1"># 添加95%置信椭圆</span><span class="w">
+  </span><span class="n">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">theme</span><span class="p">(</span><span class="w">
+    </span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"top"</span><span class="p">,</span><span class="w">
+    </span><span class="n">plot.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_text</span><span class="p">(</span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
+  </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>然后就会得到如下PCA图</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202504012006653.png" alt="image.png" /></p>
+
+<h2 id="最后">最后</h2>
+<hr />
+
+<p>使用结构变异来做PCA分析还是有很多小坑，特别是PLINK对SV支持不是很好，ALT列不能识别，需要手动替换</p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="PCA" /><summary type="html"><![CDATA[主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。]]></summary></entry><entry><title type="html">DeepsvFilter:基于深度学习完成结果变异过滤</title><link href="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/" rel="alternate" type="text/html" title="DeepsvFilter:基于深度学习完成结果变异过滤" /><published>2025-03-16T17:11:00+08:00</published><updated>2025-03-16T17:11:00+08:00</updated><id>https://kunmonster.github.io//2025/03/16/DeepsvFilter:%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4</id><content type="html" xml:base="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/"><![CDATA[<p>最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。</p>
 
 <h2 id="introduction">Introduction</h2>
 <hr />
