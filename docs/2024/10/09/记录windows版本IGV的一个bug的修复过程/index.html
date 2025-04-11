@@ -6,7 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/grids-responsive-min.css">
-  <link rel="stylesheet" href="/assets/styles.css"><!-- Begin Jekyll SEO tag v2.8.0 -->
+  <link rel="stylesheet" href="/assets/styles.css">
+  
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+        equationNumbers: {
+            autoNumber: "AMS"
+        }
+    },
+    tex2jax: {
+        inlineMath: [ ['$','$'] ],
+        displayMath: [ ['$$','$$'] ],
+        processEscapes: true,
+    }
+});
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>记录windows版本IGV的一个bug的修复过程 | kkmonster</title>
 <meta name="generator" content="Jekyll v3.10.0" />
 <meta property="og:title" content="记录windows版本IGV的一个bug的修复过程" />
@@ -77,9 +96,9 @@
   <li>IGV通过保存一个偏好文件以达到窗口在下次打开的时候重新显示在上次关闭的同一位置</li>
   <li>当有多块屏幕时，如果上次关闭时IGV所在位置的屏幕没有被连接（特别是作为主屏幕左边的副屏时）那么此时将会出现上述情况</li>
   <li>根本原因就是指定窗口大小和位置的(x,y,width,height)在上次退出时保存为
-\(x+width &lt;0\)
+<span class="kdmath">$x+width <0$</span>
 或者
-\(y+height &lt; 0\)
+<span class="kdmath">$y+height < 0$</span>
 导致在当前屏幕上不能显示出该窗口。</li>
 </ul>
 
@@ -88,7 +107,7 @@
 
 <p>由于作者使用Mac OS，无法复现该问题，所以我计划修复此bug。</p>
 
-<p>最初我计划给 \(x+width\) 和 \(y+height\)设定一个最小值，如果小于该最小值那么直接将坐标强行拉回(0,0,1150,800)，但是此种做法将会改变原本的保留用户位置偏好的功能。在与作者讨论并且其建议采用以下修复方法</p>
+<p>最初我计划给 <span class="kdmath">$x+width$</span> 和 <span class="kdmath">$y+height$</span>设定一个最小值，如果小于该最小值那么直接将坐标强行拉回(0,0,1150,800)，但是此种做法将会改变原本的保留用户位置偏好的功能。在与作者讨论并且其建议采用以下修复方法</p>
 
 <ul>
   <li>获取所有显示设备窗口坐标并存于数组中</li>

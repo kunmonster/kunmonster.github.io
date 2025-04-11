@@ -6,7 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/grids-responsive-min.css">
-  <link rel="stylesheet" href="/assets/styles.css"><!-- Begin Jekyll SEO tag v2.8.0 -->
+  <link rel="stylesheet" href="/assets/styles.css">
+  
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+        equationNumbers: {
+            autoNumber: "AMS"
+        }
+    },
+    tex2jax: {
+        inlineMath: [ ['$','$'] ],
+        displayMath: [ ['$$','$$'] ],
+        processEscapes: true,
+    }
+});
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>理解结构变异BED在VCF中的描述 | kkmonster</title>
 <meta name="generator" content="Jekyll v3.10.0" />
 <meta property="og:title" content="理解结构变异BED在VCF中的描述" />
@@ -146,9 +165,9 @@
 <p>总结上述四种变异的组织方式有以下规律</p>
 <ul>
   <li>只要是断裂后的左边片段，那么断裂点总是出现在标识另一片段的左边，断裂的右片段同理</li>
-  <li>如果两个相接的片段在断裂前分别是一左一右，那么必然是\(N[CHR:POS[\) 和 \(]CHR:POS]N\) 相连</li>
-  <li>但是如果两个相接的片段在断裂前都是左边的话，那么必然是\(N]CHR:POS]\) 和 \(N]CHR:POS]\) 相连</li>
-  <li>如果两个相接的片段在断裂前都是右边的话，那么必然是\([CHR:POS[N\) 和 \([CHR:POS[N\) 相连</li>
+  <li>如果两个相接的片段在断裂前分别是一左一右，那么必然是<span class="kdmath">$N[CHR:POS[$</span> 和 <span class="kdmath">$]CHR:POS]N$</span> 相连</li>
+  <li>但是如果两个相接的片段在断裂前都是左边的话，那么必然是<span class="kdmath">$N]CHR:POS]$</span> 和 <span class="kdmath">$N]CHR:POS]$</span> 相连</li>
+  <li>如果两个相接的片段在断裂前都是右边的话，那么必然是<span class="kdmath">$[CHR:POS[N$</span> 和 <span class="kdmath">$[CHR:POS[N$</span> 相连</li>
 </ul>
 
 <blockquote>

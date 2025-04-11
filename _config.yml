@@ -34,6 +34,8 @@ social:
 google_site_verification: xxxxx
 lang: en
 
+kramdown:
+  math_engine: null
 
 destination:  docs
 
