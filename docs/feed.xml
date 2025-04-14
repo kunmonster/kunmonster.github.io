@@ -1,4 +1,266 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-04-11T21:26:27+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用SV完成主成分分析</title><link href="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/" rel="alternate" type="text/html" title="使用SV完成主成分分析" /><published>2025-04-11T20:30:00+08:00</published><updated>2025-04-11T20:30:00+08:00</updated><id>https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/"><![CDATA[<p>主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-04-14T22:01:16+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Drawing variation histogram by Circos</title><link href="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/" rel="alternate" type="text/html" title="Drawing variation histogram by Circos" /><published>2025-04-14T22:00:00+08:00</published><updated>2025-04-14T22:00:00+08:00</updated><id>https://kunmonster.github.io//2025/04/14/Circos_draw_histogram</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/"><![CDATA[<h2 id="installation">Installation</h2>
+<hr />
+<p>Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。</p>
+
+<p>Perl &amp; Module Install :  <a href="https://circos.ca/documentation/tutorials/configuration/perl_and_modules/">perl and perl modules</a></p>
+
+<p>Circos install: <a href="https://circos.ca/documentation/tutorials/configuration/installation/">Install circos</a></p>
+
+<h2 id="description">Description</h2>
+<hr />
+<p>Circos的圈图基本组成：最外圈染色体（本人这样干，可以不这样）称为：karotype，里面的一圈为一种数据，称为一个track。</p>
+
+<p>Circos作图完全依赖配置文件，在配置文件中指定需要可视化的数据，可视化的类型，以及图像的各种参数，见下部分。</p>
+
+<h2 id="configuration">Configuration</h2>
+<hr />
+<p>基础配置文件描述</p>
+
+<pre><code class="language-txt">karyotype = "染色体文件"
+
+&lt;ideogram&gt;
+各种基础配置
+&lt;/ideogram&gt;
+
+&lt;image&gt;
+图片配置,包括图片大小,像素,保存位置等
+&lt;/image&gt;
+
+&lt;plots&gt;
+所有图像
+&lt;plot&gt;
+单个图像
+&lt;/plot&gt;
+&lt;/plots&gt;
+
+&lt;links&gt;
+线条
+&lt;/links&gt;
+</code></pre>
+
+<h2 id="data-preperation">Data preperation</h2>
+<hr />
+
+<h3 id="准备染色体文件">准备染色体文件</h3>
+
+<p>染色体文件即上述的karyotype.txt , 该文件基本格式如下</p>
+
+<pre><code class="language-txt">chr - CHRNAME CHRLABEL START END COLOR 
+column 1: 表示该行记录是染色体
+column 2: - 必要的
+column 3: 染色体名字,看你自己
+column 4: 染色体标签,可以理解为最后图上显示的染色体名字
+column 5: 染色体起始位置
+column 6: 染色体终点
+column 7: 颜色,我这里指定chr1,chr2 etc是因为有内置的颜色名为chrN,后面可以自己指定
+
+chr - chr1 1 0 5000000 chr1
+chr - chr2 2 0 10000000 chr2 
+chr - chr3 3 0 20000000 chr3 
+chr - chr4 4 0 50000000 chr4 
+chr - chr5 5 0 100000000 chr5
+</code></pre>
+
+<p>一般来说，确定染色体后，就不需要再修改了，这个可以一直使用，本文只介绍了单个圈图的情况，还有其他多图情况可以参看官方文档。</p>
+
+<h3 id="准备数据文件">准备数据文件</h3>
+
+<p>前面提到，内圈的数据都是一个track对应一个数据文件，那这个文件格式如何，怎么准备呢?</p>
+
+<p>本文主要描述变异Histogram怎么做，其他类型请自行查阅文档。</p>
+
+<ol>
+  <li>获取基因组范围</li>
+</ol>
+
+<p>我们需要准备一个基因组范围文件，以制表符分隔，格式为: CHR \t START(0) \t END</p>
+
+<p>如果你使用RefSeq参考基因组，你可以下载其sequence_report.tsv 使用awk工具提取，最终结果应如下</p>
+
+<pre><code class="language-txt">
+染色体名字 \t 0 \t 染色体终点  
+CHR1 \t 0 \t 5000000
+
+</code></pre>
+
+<ol>
+  <li>获取变异位点</li>
+</ol>
+
+<p>如果是snp、indel或者SV(单纯看分布，不需要SVTYPE)</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS'</span> your_vcf_file <span class="o">&gt;</span> variant_site.txt
+</code></pre></div></div>
+
+<p>如果是SV并且需要按照SVTYPE分组，作堆叠直方图</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS\t%INFO/SVTYPE'</span> your_vcf_file <span class="o">&gt;</span> variant_site.txt
+</code></pre></div></div>
+
+<ol>
+  <li>获取分箱文件</li>
+</ol>
+
+<p>直方图，需要一个范围并且统计范围内变异的数量，这个过程称为分箱，在准备好了上述两文件后，使用下列Python脚本获取分箱文件</p>
+
+<pre><code class="language-python3">import sys
+from collections import defaultdict
+
+
+genome_file = sys.argv[1]
+sv_file = sys.argv[2]
+bin_size = int(sys.argv[3])
+
+  
+  
+
+# Step 1: 读取基因组范围
+chr_ranges = {}
+with open(genome_file) as gf:
+    for line in gf:
+        fields = line.strip().split('\t')
+        chr_name, start, end = fields[0], int(fields[1]), int(fields[2])
+        chr_ranges[chr_name] = (start, end)
+
+# Step 2: 读取SV，统计每个 bin 的每种 type 数量
+bin_type_counts = defaultdict(lambda: defaultdict(int))
+total_type_counts = defaultdict(int)
+bin_occurrence_counts = defaultdict(int)  # 每种type出现了多少个bin（用于计算平均）
+
+  
+def deal_not_sv(var_file):
+    with open(var_file) as sf:
+    for line in sf:
+        fields = line.strip().split('\t')
+        if len(fields) &lt; 2:
+            continue
+        chr_name, pos = fields[0], int(fields[1])
+        if chr_name not in chr_ranges:
+            continue
+        chr_start, chr_end = chr_ranges[chr_name]
+        if not (chr_start &lt;= pos &lt;= chr_end):
+            continue
+        bin_index = (pos - chr_start) // bin_size
+        bin_counts[(chr,bin_index)] += 1
+
+  
+
+with open(sv_file) as sf:
+    for line in sf:
+        fields = line.strip().split('\t')
+        if len(fields) &lt; 3:
+            continue
+        chr_name, pos, sv_type = fields[0], int(fields[1]), fields[2]
+        if chr_name not in chr_ranges:
+            continue
+        chr_start, chr_end = chr_ranges[chr_name]
+        if not (chr_start &lt;= pos &lt;= chr_end):
+            continue
+        bin_index = (pos - chr_start) // bin_size
+        bin_key = (chr_name, bin_index)
+        bin_type_counts[bin_key][sv_type] += 1
+        total_type_counts[sv_type] += 1
+
+  
+
+# Step 3: 统计所有 bin 数
+total_bins = len(bin_type_counts)
+
+# Step 4: 计算每种类型的平均值，并排序列名
+sv_types = list(total_type_counts.keys())
+sv_types.sort(key=lambda t: total_type_counts[t] / total_bins, reverse=True)
+
+  
+
+# Step 5: 输出
+print("chr\tbin_start\tbin_end\t" + "\t".join(sv_types))
+
+for (chr_name, bin_index), type_counts in sorted(bin_type_counts.items(), key=lambda x: (x[0][0], x[0][1])):
+    chr_start, chr_end = chr_ranges[chr_name]
+    bin_start = chr_start + bin_index * bin_size
+    bin_end = min(bin_start + bin_size - 1, chr_end)
+    counts = [str(type_counts.get(t, 0)) for t in sv_types]
+    print(f"{chr_name}\t{bin_start}\t{bin_end}\t" + ",".join(counts))
+    
+</code></pre>
+
+<p>保存上述脚本文件并运行</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python 上述python文件路径 基因组范围文件 变异位点文件 分箱大小 <span class="o">&gt;</span> 分箱文件
+</code></pre></div></div>
+
+<p>注意，针对结构变异的堆叠直方图，本脚本在输出分箱文件时，第一行是表头，方便用户查看各列对应的变异种类，作图之前需要将其删除。</p>
+<h2 id="作图">作图</h2>
+<hr />
+
+<p>有了染色体文件和分箱文件后，现在完善配置文件，假设你项目文件结构如下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>project
+├── data
+│   ├── bin_data.txt
+│   ├── karyotype.txt
+└── circos.conf
+</code></pre></div></div>
+
+<p>circos.conf就是最重要的配置文件，其内容应该如下</p>
+
+<pre><code class="language-txt">katyotype = ./data/karyotype.txt
+# 默认显示所有染色体,如果有其他设置需要将这个设置成NO
+chromosomes_display_default = yes 
+
+&lt;ideogram&gt;
+	# 表示每条染色体间的距离,r表示相对距离
+	&lt;spacing&gt;
+		default = 0.005r 
+	&lt;/spacing&gt;
+	
+	radius = 0.9r
+	thickness = 50p
+	fill = yes
+	stroke_thickness = 2p
+	stroke_color = dgrey
+	
+	show_label = yes
+	lab_font = deafult
+	label_radius = 1r + 75p
+	label_size = 30
+	lable_parallel = yes
+&lt;/ideogram&gt;
+
+&lt;image&gt;
+	# 图片配置,没有自己配置的情况下,使用绝对路径导入位于 circos安装目录/etc/下的image.conf
+	&lt;&lt;include circos安装目录/etc/image.conf&gt;&gt;
+&lt;/image&gt;
+
+&lt;plots&gt;
+	&lt;plot&gt;
+		type = histogram
+		file = ./data/bin_data.txt
+		thickness = 0.5p
+		color = black
+		# max代表你想在图中显示的最大值,根据你每个窗口的值来看
+		max = 20000
+		# r0表示该track的内半径,单位r表示相对于这个圆的大小
+		r0 = 0.85r 
+		# r1表示该track的外半径,单位r表示相对于这个圆的大小
+		r1 = 0.95r
+		# 注意,我这里使用的SV的数据,并且打算做堆叠柱状图,我的堆叠中有4个种类,所以这里有四种颜色,如果只有一种的只需要一种颜色,这里的颜色的定义在Circos安装目录下etc下的colors.conf中,需要导入
+		fill_color = vvdblue,dblue,lblue,vvblue
+	&lt;/plot&gt;
+&lt;/plots&gt;
+
+
+&lt;&lt;include circos安装目录/etc/colors_fonts_patterns.conf&gt;&gt;
+&lt;&lt;include circos安装目录/etc/colors.conf&gt;&gt;
+&lt;&lt;include circos安装目录/etc/housekeeping.conf&gt;&gt;
+
+</code></pre>
+
+<p>准备好上述工作后，只需要在项目根目录下运行如下命令，将会得到circos.png 和 circos.svg两种格式图片</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>circos <span class="nt">--conf</span> circos.conf
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202504142100655.svg" alt="circos.svg" /></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="VISUAL" /><summary type="html"><![CDATA[Installation Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。]]></summary></entry><entry><title type="html">使用SV完成主成分分析</title><link href="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/" rel="alternate" type="text/html" title="使用SV完成主成分分析" /><published>2025-04-11T20:30:00+08:00</published><updated>2025-04-11T20:30:00+08:00</updated><id>https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/"><![CDATA[<p>主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。</p>
 
 <p>在群体基因组中，我们经常使用PCA来查看群体间的关系，以及群体内分层的现象等，大部分时间都是使用SNP来进行分析，也就是各群体间共有的SNP位点，对他们的基因型进行主成分分析。</p>
 

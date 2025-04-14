@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/grids-responsive-min.css">
+  <link rel="stylesheet" href="/assets/styles.css">
+  
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+        equationNumbers: {
+            autoNumber: "AMS"
+        }
+    },
+    tex2jax: {
+        inlineMath: [ ['$','$'] ],
+        displayMath: [ ['$$','$$'] ],
+        processEscapes: true,
+    }
+});
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Drawing variation histogram by Circos | kkmonster</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Drawing variation histogram by Circos" />
+<meta name="author" content="Feng kunjiang" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Installation Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。" />
+<meta property="og:description" content="Installation Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。" />
+<link rel="canonical" href="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/" />
+<meta property="og:url" content="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/" />
+<meta property="og:site_name" content="kkmonster" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-04-14T22:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Drawing variation histogram by Circos" />
+<meta name="google-site-verification" content="xxxxx" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Feng kunjiang","url":"https://github.com/kunmonster/"},"dateModified":"2025-04-14T22:00:00+08:00","datePublished":"2025-04-14T22:00:00+08:00","description":"Installation Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。","headline":"Drawing variation histogram by Circos","mainEntityOfPage":{"@type":"WebPage","@id":"https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/"},"url":"https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/"}</script>
+<!-- End Jekyll SEO tag -->
+<link type="application/atom+xml" rel="alternate" href="https://kunmonster.github.io//feed.xml" title="kkmonster" />
+</head>
+
+
+  <body>
+
+    <div class="container pure-g"><div class="sidebar-left pure-u-1 pure-u-md-1-4" style="background-color: rgb(40, 73, 77); color: rgb(255, 255, 255); background-image: url(/bg.jpg);"><header class="masthead">
+  <div class="avatar"><img src="/avatar.jpg" class="avatar-image" alt="Feng kunjiang">
+    </div>
+  <div class="masthead-title">
+    <a href="/" title="Home">kkmonster</a>
+  </div>
+  <div class="masthead-tagline">
+    <small>生命中有万事的可能</small>
+  </div><nav class="navigation">
+    <ul class="navigation-list"><li class="navigation-item">
+        <a onclick="sessionStorage.setItem('forceCheckScroll', 'true')" href="/">Blog</a>
+      </li><li class="navigation-item">
+        <a onclick="sessionStorage.setItem('forceCheckScroll', 'true')" href="/about/">About</a>
+      </li></ul>
+  </nav><div class="social pure-menu pure-menu-horizontal">
+      <ul class="social-icons pure-menu-list">
+      <li class="pure-menu-item">
+          <a class="social-icon pure-menu-link" href="mailto://fengkunjiang@stu.ynu.edu.cn">
+            <i class="fas fa-envelope" title="Email"></i>
+          </a>
+        </li><li class="pure-menu-item">
+          <a class="social-icon pure-menu-link" href="https://github.com/kunmonster">
+            <i class="fab fa-github" title="Github"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+</header>
+</div>
+
+      <div class="content pure-u-1 pure-u-md-1-2"><main>
+  <article class="post">
+  <h1 class="post-title">Drawing variation histogram by Circos</h1>
+  <div class="post-meta"><time datetime="2025-04-14T22:00:00+08:00" itemprop="datePublished">14 Apr 2025</time></div>
+
+  <h2 id="installation">Installation</h2>
+<hr />
+<p>Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。</p>
+
+<p>Perl &amp; Module Install :  <a href="https://circos.ca/documentation/tutorials/configuration/perl_and_modules/">perl and perl modules</a></p>
+
+<p>Circos install: <a href="https://circos.ca/documentation/tutorials/configuration/installation/">Install circos</a></p>
+
+<h2 id="description">Description</h2>
+<hr />
+<p>Circos的圈图基本组成：最外圈染色体（本人这样干，可以不这样）称为：karotype，里面的一圈为一种数据，称为一个track。</p>
+
+<p>Circos作图完全依赖配置文件，在配置文件中指定需要可视化的数据，可视化的类型，以及图像的各种参数，见下部分。</p>
+
+<h2 id="configuration">Configuration</h2>
+<hr />
+<p>基础配置文件描述</p>
+
+<pre><code class="language-txt">karyotype = "染色体文件"
+
+&lt;ideogram&gt;
+各种基础配置
+&lt;/ideogram&gt;
+
+&lt;image&gt;
+图片配置,包括图片大小,像素,保存位置等
+&lt;/image&gt;
+
+&lt;plots&gt;
+所有图像
+&lt;plot&gt;
+单个图像
+&lt;/plot&gt;
+&lt;/plots&gt;
+
+&lt;links&gt;
+线条
+&lt;/links&gt;
+</code></pre>
+
+<h2 id="data-preperation">Data preperation</h2>
+<hr />
+
+<h3 id="准备染色体文件">准备染色体文件</h3>
+
+<p>染色体文件即上述的karyotype.txt , 该文件基本格式如下</p>
+
+<pre><code class="language-txt">chr - CHRNAME CHRLABEL START END COLOR 
+column 1: 表示该行记录是染色体
+column 2: - 必要的
+column 3: 染色体名字,看你自己
+column 4: 染色体标签,可以理解为最后图上显示的染色体名字
+column 5: 染色体起始位置
+column 6: 染色体终点
+column 7: 颜色,我这里指定chr1,chr2 etc是因为有内置的颜色名为chrN,后面可以自己指定
+
+chr - chr1 1 0 5000000 chr1
+chr - chr2 2 0 10000000 chr2 
+chr - chr3 3 0 20000000 chr3 
+chr - chr4 4 0 50000000 chr4 
+chr - chr5 5 0 100000000 chr5
+</code></pre>
+
+<p>一般来说，确定染色体后，就不需要再修改了，这个可以一直使用，本文只介绍了单个圈图的情况，还有其他多图情况可以参看官方文档。</p>
+
+<h3 id="准备数据文件">准备数据文件</h3>
+
+<p>前面提到，内圈的数据都是一个track对应一个数据文件，那这个文件格式如何，怎么准备呢?</p>
+
+<p>本文主要描述变异Histogram怎么做，其他类型请自行查阅文档。</p>
+
+<ol>
+  <li>获取基因组范围</li>
+</ol>
+
+<p>我们需要准备一个基因组范围文件，以制表符分隔，格式为: CHR \t START(0) \t END</p>
+
+<p>如果你使用RefSeq参考基因组，你可以下载其sequence_report.tsv 使用awk工具提取，最终结果应如下</p>
+
+<pre><code class="language-txt">
+染色体名字 \t 0 \t 染色体终点  
+CHR1 \t 0 \t 5000000
+
+</code></pre>
+
+<ol>
+  <li>获取变异位点</li>
+</ol>
+
+<p>如果是snp、indel或者SV(单纯看分布，不需要SVTYPE)</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS'</span> your_vcf_file <span class="o">&gt;</span> variant_site.txt
+</code></pre></div></div>
+
+<p>如果是SV并且需要按照SVTYPE分组，作堆叠直方图</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bcftools query <span class="nt">-f</span> <span class="s1">'%CHROM\t%POS\t%INFO/SVTYPE'</span> your_vcf_file <span class="o">&gt;</span> variant_site.txt
+</code></pre></div></div>
+
+<ol>
+  <li>获取分箱文件</li>
+</ol>
+
+<p>直方图，需要一个范围并且统计范围内变异的数量，这个过程称为分箱，在准备好了上述两文件后，使用下列Python脚本获取分箱文件</p>
+
+<pre><code class="language-python3">import sys
+from collections import defaultdict
+
+
+genome_file = sys.argv[1]
+sv_file = sys.argv[2]
+bin_size = int(sys.argv[3])
+
+  
+  
+
+# Step 1: 读取基因组范围
+chr_ranges = {}
+with open(genome_file) as gf:
+    for line in gf:
+        fields = line.strip().split('\t')
+        chr_name, start, end = fields[0], int(fields[1]), int(fields[2])
+        chr_ranges[chr_name] = (start, end)
+
+# Step 2: 读取SV，统计每个 bin 的每种 type 数量
+bin_type_counts = defaultdict(lambda: defaultdict(int))
+total_type_counts = defaultdict(int)
+bin_occurrence_counts = defaultdict(int)  # 每种type出现了多少个bin（用于计算平均）
+
+  
+def deal_not_sv(var_file):
+    with open(var_file) as sf:
+    for line in sf:
+        fields = line.strip().split('\t')
+        if len(fields) &lt; 2:
+            continue
+        chr_name, pos = fields[0], int(fields[1])
+        if chr_name not in chr_ranges:
+            continue
+        chr_start, chr_end = chr_ranges[chr_name]
+        if not (chr_start &lt;= pos &lt;= chr_end):
+            continue
+        bin_index = (pos - chr_start) // bin_size
+        bin_counts[(chr,bin_index)] += 1
+
+  
+
+with open(sv_file) as sf:
+    for line in sf:
+        fields = line.strip().split('\t')
+        if len(fields) &lt; 3:
+            continue
+        chr_name, pos, sv_type = fields[0], int(fields[1]), fields[2]
+        if chr_name not in chr_ranges:
+            continue
+        chr_start, chr_end = chr_ranges[chr_name]
+        if not (chr_start &lt;= pos &lt;= chr_end):
+            continue
+        bin_index = (pos - chr_start) // bin_size
+        bin_key = (chr_name, bin_index)
+        bin_type_counts[bin_key][sv_type] += 1
+        total_type_counts[sv_type] += 1
+
+  
+
+# Step 3: 统计所有 bin 数
+total_bins = len(bin_type_counts)
+
+# Step 4: 计算每种类型的平均值，并排序列名
+sv_types = list(total_type_counts.keys())
+sv_types.sort(key=lambda t: total_type_counts[t] / total_bins, reverse=True)
+
+  
+
+# Step 5: 输出
+print("chr\tbin_start\tbin_end\t" + "\t".join(sv_types))
+
+for (chr_name, bin_index), type_counts in sorted(bin_type_counts.items(), key=lambda x: (x[0][0], x[0][1])):
+    chr_start, chr_end = chr_ranges[chr_name]
+    bin_start = chr_start + bin_index * bin_size
+    bin_end = min(bin_start + bin_size - 1, chr_end)
+    counts = [str(type_counts.get(t, 0)) for t in sv_types]
+    print(f"{chr_name}\t{bin_start}\t{bin_end}\t" + ",".join(counts))
+    
+</code></pre>
+
+<p>保存上述脚本文件并运行</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python 上述python文件路径 基因组范围文件 变异位点文件 分箱大小 <span class="o">&gt;</span> 分箱文件
+</code></pre></div></div>
+
+<p>注意，针对结构变异的堆叠直方图，本脚本在输出分箱文件时，第一行是表头，方便用户查看各列对应的变异种类，作图之前需要将其删除。</p>
+<h2 id="作图">作图</h2>
+<hr />
+
+<p>有了染色体文件和分箱文件后，现在完善配置文件，假设你项目文件结构如下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>project
+├── data
+│   ├── bin_data.txt
+│   ├── karyotype.txt
+└── circos.conf
+</code></pre></div></div>
+
+<p>circos.conf就是最重要的配置文件，其内容应该如下</p>
+
+<pre><code class="language-txt">katyotype = ./data/karyotype.txt
+# 默认显示所有染色体,如果有其他设置需要将这个设置成NO
+chromosomes_display_default = yes 
+
+&lt;ideogram&gt;
+	# 表示每条染色体间的距离,r表示相对距离
+	&lt;spacing&gt;
+		default = 0.005r 
+	&lt;/spacing&gt;
+	
+	radius = 0.9r
+	thickness = 50p
+	fill = yes
+	stroke_thickness = 2p
+	stroke_color = dgrey
+	
+	show_label = yes
+	lab_font = deafult
+	label_radius = 1r + 75p
+	label_size = 30
+	lable_parallel = yes
+&lt;/ideogram&gt;
+
+&lt;image&gt;
+	# 图片配置,没有自己配置的情况下,使用绝对路径导入位于 circos安装目录/etc/下的image.conf
+	&lt;&lt;include circos安装目录/etc/image.conf&gt;&gt;
+&lt;/image&gt;
+
+&lt;plots&gt;
+	&lt;plot&gt;
+		type = histogram
+		file = ./data/bin_data.txt
+		thickness = 0.5p
+		color = black
+		# max代表你想在图中显示的最大值,根据你每个窗口的值来看
+		max = 20000
+		# r0表示该track的内半径,单位r表示相对于这个圆的大小
+		r0 = 0.85r 
+		# r1表示该track的外半径,单位r表示相对于这个圆的大小
+		r1 = 0.95r
+		# 注意,我这里使用的SV的数据,并且打算做堆叠柱状图,我的堆叠中有4个种类,所以这里有四种颜色,如果只有一种的只需要一种颜色,这里的颜色的定义在Circos安装目录下etc下的colors.conf中,需要导入
+		fill_color = vvdblue,dblue,lblue,vvblue
+	&lt;/plot&gt;
+&lt;/plots&gt;
+
+
+&lt;&lt;include circos安装目录/etc/colors_fonts_patterns.conf&gt;&gt;
+&lt;&lt;include circos安装目录/etc/colors.conf&gt;&gt;
+&lt;&lt;include circos安装目录/etc/housekeeping.conf&gt;&gt;
+
+</code></pre>
+
+<p>准备好上述工作后，只需要在项目根目录下运行如下命令，将会得到circos.png 和 circos.svg两种格式图片</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>circos <span class="nt">--conf</span> circos.conf
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202504142100655.svg" alt="circos.svg" /></p>
+
+
+
+  
+    
+      <div class="post-tags-section">
+  <i class="post-tags-icon fas fa-tags"></i>
+  <ul class="post-tags"><li>
+        <a class="post-tag" href="/tags/#sv">sv</a></li><li>
+        <a class="post-tag" href="/tags/#visual">visual</a></li></ul>
+</div>
+
+  
+
+  
+</article>
+
+
+<aside class="related">
+  <h2>Related posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2025/04/11/%E4%BD%BF%E7%94%A8SV%E5%AE%8C%E6%88%90%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90/">
+          使用SV完成主成分分析
+          <small><time datetime="2025-04-11T20:30:00+08:00">11 Apr 2025</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/">
+          DeepsvFilter:基于深度学习完成结果变异过滤
+          <small><time datetime="2025-03-16T17:11:00+08:00">16 Mar 2025</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2024/11/16/IGV%E5%8F%AF%E8%A7%86%E5%8C%96BAM%E6%96%87%E4%BB%B6%E5%B8%AE%E5%8A%A9%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8F%98%E5%BC%82/">
+          IGV可视化BAM文件帮助理解结构变异
+          <small><time datetime="2024-11-16T17:42:00+08:00">16 Nov 2024</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+</main>
+
+<footer class="footer"><small>
+    &copy; 2023&nbsp;-&nbsp;2025 <a href="https://github.com/kunmonster/">Feng kunjiang</a>. All rights reserved.
+  </small>
+</footer>
+</div>
+      <div class="sidebar-right pure-u-1 pure-u-md-1-4">
+<div  class="toc-wrapper">
+  <h2 class="toc-title">Table of Contents</h2>
+    <nav class="toc-nav">
+      <ul class="toc">
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#description">Description</a></li>
+  <li><a href="#configuration">Configuration</a></li>
+  <li><a href="#data-preperation">Data preperation</a>
+    <ul>
+      <li><a href="#准备染色体文件">准备染色体文件</a></li>
+      <li><a href="#准备数据文件">准备数据文件</a></li>
+    </ul>
+  </li>
+  <li><a href="#作图">作图</a></li>
+</ul>
+
+  </nav>
+</div>
+
+</div>
+    </div>
+
+    <script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script><script>
+  function strip(str, remove) {
+    while (str.length > 0 && remove.indexOf(str.charAt(0)) != -1) {
+      str = str.substr(1);
+    }
+    while (str.length > 0 && remove.indexOf(str.charAt(str.length - 1)) != -1) {
+      str = str.substr(0, str.length - 1);
+    }
+    return str;
+  }
+
+  function scroll() {
+    console.log('scroll');
+    window.scrollTo({
+      left: 0, 
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+    sessionStorage.removeItem('forceCheckScroll');
+  }
+
+  const forceCheckScroll = sessionStorage.getItem('forceCheckScroll') === 'true';
+  const checkScroll = strip(window.location.pathname, '/') !== strip('', '/');
+
+  if (forceCheckScroll || checkScroll) {
+    const maxWidth = "(max-width: 48rem)";
+    const result = window.matchMedia(maxWidth);
+    if (result.matches) {
+      scroll();
+    } else {
+      result.addListener((match) => {
+        if (match.media == maxWidth) {
+          if (match.matches) {
+            scroll();
+          }
+        }
+      });
+    }
+  }
+</script>
+</body>
+</html>
