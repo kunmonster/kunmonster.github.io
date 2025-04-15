@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Drawing variation histogram by Circos
+title: 使用circos画变异分布直方图
 date: 2025-04-14 22:00
 tags: [SV,VISUAL]
 toc: true
@@ -21,7 +21,7 @@ Circos install: [Install circos](https://circos.ca/documentation/tutorials/confi
 
 ## Description
 ---
-Circos的圈图基本组成：最外圈染色体（本人这样干，可以不这样）称为：karotype，里面的一圈为一种数据，称为一个track。
+Circos的圈图基本组成：最外圈染色体（本人这样干，可以不这样）称为：karyotype，里面的一圈为一种数据，称为一个track。
 
 Circos作图完全依赖配置文件，在配置文件中指定需要可视化的数据，可视化的类型，以及图像的各种参数，见下部分。
 
@@ -62,7 +62,7 @@ karyotype = "染色体文件"
 
 染色体文件即上述的karyotype.txt , 该文件基本格式如下
 
-```txt
+```
 chr - CHRNAME CHRLABEL START END COLOR 
 column 1: 表示该行记录是染色体
 column 2: - 必要的
@@ -90,20 +90,21 @@ chr - chr5 5 0 100000000 chr5
 本文主要描述变异Histogram怎么做，其他类型请自行查阅文档。
 
 
-1. 获取基因组范围
+- 获取基因组范围
 
 我们需要准备一个基因组范围文件，以制表符分隔，格式为: CHR \t START(0) \t END 
 
 如果你使用RefSeq参考基因组，你可以下载其sequence_report.tsv 使用awk工具提取，最终结果应如下
 
-```txt
+```
 
 染色体名字 \t 0 \t 染色体终点  
 CHR1 \t 0 \t 5000000
 
 ```
 
-2. 获取变异位点
+
+- 获取变异位点
 
 如果是snp、indel或者SV(单纯看分布，不需要SVTYPE)
 
@@ -121,101 +122,86 @@ bcftools query -f '%CHROM\t%POS\t%INFO/SVTYPE' your_vcf_file > variant_site.txt
 
 直方图，需要一个范围并且统计范围内变异的数量，这个过程称为分箱，在准备好了上述两文件后，使用下列Python脚本获取分箱文件
 
-```python3
+```Python
 import sys
-from collections import defaultdict
+import pandas as pd
+import numpy as np
+import argparse
 
-
-genome_file = sys.argv[1]
-sv_file = sys.argv[2]
-bin_size = int(sys.argv[3])
-
-  
-  
+parser = argparse.ArgumentParser()
+parser.add_argument("genome", help="genome file: chr, start, end")
+parser.add_argument("variant", help="variant file: chr, pos[, type]")
+parser.add_argument("bin_size", type=int)
+parser.add_argument("--typed", action="store_true", help="3-column input with types")
+args = parser.parse_args()
 
 # Step 1: 读取基因组范围
-chr_ranges = {}
-with open(genome_file) as gf:
-    for line in gf:
-        fields = line.strip().split('\t')
-        chr_name, start, end = fields[0], int(fields[1]), int(fields[2])
-        chr_ranges[chr_name] = (start, end)
+genome_df = pd.read_csv(args.genome, sep='\t', header=None, names=['chr', 'start', 'end'])
 
-# Step 2: 读取SV，统计每个 bin 的每种 type 数量
-bin_type_counts = defaultdict(lambda: defaultdict(int))
-total_type_counts = defaultdict(int)
-bin_occurrence_counts = defaultdict(int)  # 每种type出现了多少个bin（用于计算平均）
+# Step 2: 读取变异信息
+if args.typed:
+    var_df = pd.read_csv(args.variant, sep='\t', header=None, names=['chr', 'pos', 'type'])
+else:
+    var_df = pd.read_csv(args.variant, sep='\t', header=None, names=['chr', 'pos'])
+    var_df['type'] = 'COUNT'  
 
-  
-def deal_not_sv(var_file):
-    with open(var_file) as sf:
-    for line in sf:
-        fields = line.strip().split('\t')
-        if len(fields) < 2:
-            continue
-        chr_name, pos = fields[0], int(fields[1])
-        if chr_name not in chr_ranges:
-            continue
-        chr_start, chr_end = chr_ranges[chr_name]
-        if not (chr_start <= pos <= chr_end):
-            continue
-        bin_index = (pos - chr_start) // bin_size
-        bin_counts[(chr,bin_index)] += 1
+result_list = []
 
-  
+for _, row in genome_df.iterrows():
+    chr_name, chr_start, chr_end = row['chr'], row['start'], row['end']
+    # 取出位于该染色体的所有变异
+    chr_data = var_df[var_df['chr'] == chr_name].copy()
+    if chr_data.empty:
+        continue
 
-with open(sv_file) as sf:
-    for line in sf:
-        fields = line.strip().split('\t')
-        if len(fields) < 3:
-            continue
-        chr_name, pos, sv_type = fields[0], int(fields[1]), fields[2]
-        if chr_name not in chr_ranges:
-            continue
-        chr_start, chr_end = chr_ranges[chr_name]
-        if not (chr_start <= pos <= chr_end):
-            continue
-        bin_index = (pos - chr_start) // bin_size
-        bin_key = (chr_name, bin_index)
-        bin_type_counts[bin_key][sv_type] += 1
-        total_type_counts[sv_type] += 1
+    # 获取该染色体上每个bin的范围
+    bins = np.arange(chr_start, chr_end , args.bin_size)
+    if bins[-1] < chr_end:
+        bins = np.append(bins,chr_end + 1)
+   
+    chr_data['bin'] = pd.cut(chr_data['pos'], bins=bins,  right=False,include_lowest=True)
+    # 统计每个 bin 的每种 type 数量
+    bin_counts = chr_data.groupby(['bin', 'type'],observed=False).size().unstack(fill_value=0)
+    # 按 bin 拆分出 bin_start / bin_end
+    bin_counts = bin_counts.reset_index()
+    bin_counts['bin_start'] = bin_counts['bin'].map(lambda x : int(x.left))
+    bin_counts['bin_end'] = bin_counts['bin'].map(lambda x : int(x.right) - 1)
+    
+    bin_counts.insert(0, 'chr', chr_name)
+    bin_counts.drop(columns=['bin'], inplace=True)
 
-  
+    result_list.append(bin_counts)
 
-# Step 3: 统计所有 bin 数
-total_bins = len(bin_type_counts)
+# 合并所有染色体
+all_bins = pd.concat(result_list, ignore_index=True)
 
-# Step 4: 计算每种类型的平均值，并排序列名
-sv_types = list(total_type_counts.keys())
-sv_types.sort(key=lambda t: total_type_counts[t] / total_bins, reverse=True)
+# 排序列（按平均值降序）
+if args.typed:
+    type_cols = all_bins.columns.difference(['chr', 'bin_start', 'bin_end'])
+    mean_order = all_bins[type_cols].mean().sort_values(ascending=False).index
+    all_bins = all_bins[['chr', 'bin_start', 'bin_end'] + list(mean_order)]
+    type_col_name = ','.join(mean_order)
+    all_bins[type_col_name] = all_bins[mean_order].astype(str).agg(','.join, axis=1)
+    all_bins = all_bins[['chr', 'bin_start', 'bin_end',type_col_name]]
+    
+else:
+    all_bins = all_bins[['chr', 'bin_start', 'bin_end', 'COUNT']]
 
-  
-
-# Step 5: 输出
-print("chr\tbin_start\tbin_end\t" + "\t".join(sv_types))
-
-for (chr_name, bin_index), type_counts in sorted(bin_type_counts.items(), key=lambda x: (x[0][0], x[0][1])):
-    chr_start, chr_end = chr_ranges[chr_name]
-    bin_start = chr_start + bin_index * bin_size
-    bin_end = min(bin_start + bin_size - 1, chr_end)
-    counts = [str(type_counts.get(t, 0)) for t in sv_types]
-    print(f"{chr_name}\t{bin_start}\t{bin_end}\t" + ",".join(counts))
-    
+# 输出
+all_bins.to_csv(sys.stdout, sep='\t', index=False)
 ```
 
 
 保存上述脚本文件并运行
 
 ```shell
-python 上述python文件路径 基因组范围文件 变异位点文件 分箱大小 > 分箱文件
+python 上述python文件路径 基因组范围文件 变异位点文件 分箱大小 --typed > 分箱文件
 ```
 
 注意，针对结构变异的堆叠直方图，本脚本在输出分箱文件时，第一行是表头，方便用户查看各列对应的变异种类，作图之前需要将其删除。
 ## 作图
 ---
-
 有了染色体文件和分箱文件后，现在完善配置文件，假设你项目文件结构如下
-
 
 ```
 project
