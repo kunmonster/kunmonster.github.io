@@ -31,7 +31,7 @@ Circos作图完全依赖配置文件，在配置文件中指定需要可视化�
 ---
 基础配置文件描述
 
-```txt
+```
 karyotype = "染色体文件"
 
 <ideogram>
@@ -122,7 +122,7 @@ bcftools query -f '%CHROM\t%POS\t%INFO/SVTYPE' your_vcf_file > variant_site.txt
 
 直方图，需要一个范围并且统计范围内变异的数量，这个过程称为分箱，在准备好了上述两文件后，使用下列Python脚本获取分箱文件
 
-```Python
+```
 import sys
 import pandas as pd
 import numpy as np

@@ -103,7 +103,7 @@ MathJax.Hub.Config({
 <hr />
 <p>基础配置文件描述</p>
 
-<pre><code class="language-txt">karyotype = "染色体文件"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>karyotype = "染色体文件"
 
 &lt;ideogram&gt;
 各种基础配置
@@ -123,7 +123,7 @@ MathJax.Hub.Config({
 &lt;links&gt;
 线条
 &lt;/links&gt;
-</code></pre>
+</code></pre></div></div>
 
 <h2 id="data-preperation">Data preperation</h2>
 <hr />
@@ -190,7 +190,7 @@ CHR1 \t 0 \t 5000000
 
 <p>直方图，需要一个范围并且统计范围内变异的数量，这个过程称为分箱，在准备好了上述两文件后，使用下列Python脚本获取分箱文件</p>
 
-<pre><code class="language-Python">import sys
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import sys
 import pandas as pd
 import numpy as np
 import argparse
@@ -256,7 +256,7 @@ else:
 
 # 输出
 all_bins.to_csv(sys.stdout, sep='\t', index=False)
-</code></pre>
+</code></pre></div></div>
 
 <p>保存上述脚本文件并运行</p>
 
