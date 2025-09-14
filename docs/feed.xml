@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-14T21:18:59+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">使用circos画变异分布直方图</title><link href="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/" rel="alternate" type="text/html" title="使用circos画变异分布直方图" /><published>2025-04-14T22:00:00+08:00</published><updated>2025-04-14T22:00:00+08:00</updated><id>https://kunmonster.github.io//2025/04/14/Circos_draw_histogram</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/"><![CDATA[<h2 id="installation">Installation</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-14T21:29:43+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">CSV-Filter数据准备解读</title><link href="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/" rel="alternate" type="text/html" title="CSV-Filter数据准备解读" /><published>2025-09-14T21:20:00+08:00</published><updated>2025-09-14T21:20:00+08:00</updated><id>https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB</id><content type="html" xml:base="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/"><![CDATA[<p>该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。</p>
+
+<p>该研究也将结构变异过滤问题转化为图像二分类问题。那么首要问题还是如何将结构变异转化为图像，以及negative training sample，与其他类似研究一样，该研究同样基于CIGAR比对信息来编码图像，并将图像编码拆解成：</p>
+<ol>
+  <li>Structural variant sites selecting;</li>
+  <li>Reads selecting;</li>
+  <li>Image coding。</li>
+</ol>
+
+<p>下文将解析作者的处理。</p>
+
+<h3 id="negative-training-samples-preparing">Negative training samples preparing</h3>
+<hr />
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202509141707109.png" alt="image.png" /></p>
+
+<p>作者通过分析结构变的分布，发现变异的长度符合泊松分布。作者计算变异长度的平均值，方差并计算这两者的调和平均数。将调和平均数作为密度函数的参数，遵循该分布，生成negative samples。</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202509141956013.png" alt="image.png" /></p>
+
+<p>随后迭代生成负样本，如果生成的负样本和相邻的样本有超过一半的重合，那么应舍弃并重新生成。在完成迭代后，作者将产生的变异标准化。</p>
+
+<p>图中，$\lambda_{sv}$ 应该truth set的sv长度的均值和方差的调和平均数</p>
+
+<h3 id="sites-locating">Sites locating</h3>
+<hr />
+
+<h3 id="reads-selecting">Reads selecting</h3>
+<hr />
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202509141638127.png" alt="image.png" /></p>
+
+<p>如图所示，在确定变异位点后，围绕变异位点进行reads选取。</p>
+
+<p>从图a可以看出，作者在断点周围向上游和下游都扩展了一段extension，所有覆盖整个范围的reads将会被选择。</p>
+
+<h3 id="image-coding">Image coding</h3>
+<hr />
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202509141704588.png" alt="CSV-Filter-img-coding.png" /></p>
+
+<p>在选取reads后，维护两个列表用于存储所有reads的起点和终点，确认所有reads起点中最小的，命名为：$b_{min}$ ，  迭代所有reads，计算当前reads起点与$b_{min}$的偏移，确定当前reads编码的范围 ($b_{i} - b_{min},e_{i}$)。</p>
+
+<p>在填充像素时，针对CIGAR中的”N”,”P”,”H”,”=”,”X” 以及偏移部分，填充0，上述reads编码范围部分使用kernal_cigar函数填充。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">kernel_cigar</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">ref_min</span><span class="p">,</span> <span class="n">ref_max</span><span class="p">,</span> <span class="n">cigar_resize</span><span class="p">,</span> <span class="n">zoom</span><span class="p">):</span>
+	<span class="n">cigars_img</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">ref_max</span> <span class="o">-</span> <span class="n">ref_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">zoom</span><span class="p">)])</span>
+	<span class="n">max_terminal</span> <span class="o">=</span> <span class="n">read</span><span class="p">.</span><span class="n">reference_start</span> <span class="o">-</span> <span class="n">ref_min</span>
+</code></pre></div></div>
+
+<h3 id="dataset">Dataset</h3>
+<hr />
+
+<p>该研究主要使用两个样本(HG002, NA12878)的相关文件用于训练</p>
+
+<h4 id="hg002">HG002</h4>
+
+<ul>
+  <li>Third-generation data</li>
+</ul>
+
+<p>三代测序数据使用minimap2, pbmm2, NGMLR比对到参考基因组 <a href="https://ftp.ensembl.org/pub/release-75/fasta/homo_sapiens/dna/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz">GRCh37</a></p>
+
+<p>测序数据包括</p>
+
+<p><a href="https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/AshkenazimTrio/HG002_NA24385_son/PacBio_MtSinai_NIST/">PacBio 70x(CLR)</a></p>
+
+<p><a href="https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/AshkenazimTrio/HG002_NA24385_son/PacBio_CCS_15kb_20kb_chemistry2/reads/">PacBio CCs 15kb_20kb chemistry2(HIFI)</a></p>
+
+<p><a href="ftp://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/AshkenazimTrio/HG002_NA24385_son/Ultralong_OxfordNanopore/guppy-V3.2.4_2020-01-22/HG002_ONT-UL_GIAB_20200122.fastq.gz">Oxford Nanopore ultralong(guppy-V3.2.4_2020-01-22)</a></p>
+
+<ul>
+  <li>SV</li>
+</ul>
+
+<p>该研究选用了GIAB(Genome in a Bottle)的benchmark数据集-<a href="https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/data/AshkenazimTrio/analysis/NIST_SVs_Integration_v0.6/">HG002_SVs_Tier1_v0.6</a>，该数据集包括4,199个deletions与5,442个insertions。</p>
+
+<ul>
+  <li>bam</li>
+</ul>
+
+<p>二代数据该研究使用来自HG002的illumina 300X，参考基因组为<a href="https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz">hs37d5</a>。<a href="https://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/HG002_NA24385_son/NIST_HiSeq_HG002_Homogeneity-10953946/NHGRI_Illumina300X_AJtrio_novoalign_bams/HG002.hs37d5.60x.1.bam">HG002.hs37d5.60x.1.bam</a></p>
+
+<h4 id="na12878">NA12878</h4>
+
+<ul>
+  <li>SV</li>
+</ul>
+
+<p>有研究对NA12878的三代测序数据使用三种方法检测了结构变异，包括INS,DEL. <a href="https://ftp.ncbi.nlm.nih.gov/giab/ftp/data/NA12878/NA12878_PacBio_MtSinai/NA12878.sorted.vcf.gz">vcf-file</a></p>
+
+<p>同时该样本还有基于二代测序数据的结构变异数据集. <a href="ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/integrated_sv_map/supporting/GRCh38_positions/ALL.wgs.mergedSV.v8.20130502.svs.genotypes.GRCh38.vcf.gz.">vcf-file</a></p>
+
+<ul>
+  <li>bam</li>
+</ul>
+
+<p>PacBio 测序数据比对到hg19的bam文件. <a href="https://ftp.ncbi.nlm.nih.gov/giab/ftp/data/NA12878/NA12878_PacBio_MtSinai/sorted_final_merged.bam">bam_file</a>
+illumina测序数据比对到GRCh38的bam文件. <a href="ftp://ftp.sra.ebi.ac.uk/vol1/run/ERR194/ERR194147/NA12878_S1.bam">bam_file</a></p>
+
+<ul>
+  <li>reference</li>
+</ul>
+
+<p><a href="http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/chromFa.tar.gz">hg19</a></p>
+
+<p><a href="https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa">GRCh38</a></p>
+
+<h4 id="t2t-chm13">T2T-CHM13</h4>
+
+<p>该数据集用于验证，该数据集没有对应的gold standard dataset, 作者使用Dipcall(v0.3)对CHM13的端到端版本进行变异检测，将大于50bp且位于高可信区域的变异视为 ground truth</p>
+
+<p><a href="https://github.com/marbl/CHM13">T2T-CHM13</a></p>
+
+<h4 id="ashkenazim-trio">Ashkenazim Trio</h4>
+
+<p>作者还使用HG002, HG003, HG004统计CIGAR字符串中各个操作的比例. <a href="https://ftp.ncbi.nih.gov/giab/ftp/data/AshkenazimTrio/">Archive data for the Ashkenazim Trio</a></p>
+
+<h3 id="reference">Reference</h3>
+<hr />
+<p>[1] Xia Z, Xiang W, Wang Q, Li X, Li Y, Gao J, et al. CSV-Filter: a deep learning-based comprehensive structural variant filtering method for both short and long reads. Bioinformatics. 2024;40(9).</p>
+
+<p>[2] Xiang W, Cui Y, Yang Y, Zhang A, Ji B, Peng S, editors. MSVF: Multi-task Structure Variation Filter with Transfer Learning in High-throughput Sequencing. 2022 IEEE International Conference on Bioinformatics and Biomedicine (BIBM); 2022 6-8 Dec. 2022.</p>
+
+<p>[3] Zook JM, Hansen NF, Olson ND, Chapman L, Mullikin JC, Xiao C, et al. A robust benchmark for detection of germline large deletions and insertions. Nat Biotechnol. 2020;38(11):1347-55.</p>
+
+<p>……</p>
+
+<p>本博客仅作为论文阅读笔记，学习过程的记录！</p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="Deeplearning" /><summary type="html"><![CDATA[该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。]]></summary></entry><entry><title type="html">使用circos画变异分布直方图</title><link href="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/" rel="alternate" type="text/html" title="使用circos画变异分布直方图" /><published>2025-04-14T22:00:00+08:00</published><updated>2025-04-14T22:00:00+08:00</updated><id>https://kunmonster.github.io//2025/04/14/Circos_draw_histogram</id><content type="html" xml:base="https://kunmonster.github.io//2025/04/14/Circos_draw_histogram/"><![CDATA[<h2 id="installation">Installation</h2>
 <hr />
 <p>Circos主要使用Perl编写，依赖了大量的Perl包，官网有详细的安装教程，本文不再介绍，贴上部分链接。</p>
 
@@ -406,7 +532,7 @@ plink2 <span class="nt">--bfile</span> plink_input <span class="nt">--pca</span>
 <h2 id="最后">最后</h2>
 <hr />
 
-<p>使用结构变异来做PCA分析还是有很多小坑，特别是PLINK对SV支持不是很好，ALT列不能识别，需要手动替换</p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="PCA" /><summary type="html"><![CDATA[主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。]]></summary></entry><entry><title type="html">DeepsvFilter:基于深度学习完成结果变异过滤</title><link href="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/" rel="alternate" type="text/html" title="DeepsvFilter:基于深度学习完成结果变异过滤" /><published>2025-03-16T17:11:00+08:00</published><updated>2025-03-16T17:11:00+08:00</updated><id>https://kunmonster.github.io//2025/03/16/DeepsvFilter:%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4</id><content type="html" xml:base="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/"><![CDATA[<p>最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。</p>
+<p>使用结构变异来做PCA分析还是有很多小坑，特别是PLINK对SV支持不是很好，ALT列不能识别，需要手动替换</p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="SV" /><category term="PCA" /><summary type="html"><![CDATA[主成分分析(Principal component analysis)是一种降维的方法， 将高维特征映射到低维空间，也就是如果一个记录有很多特征，那么我们需要找到一组更少的特征来表示这众多的特征，这些更少的特征就称为主成分。]]></summary></entry><entry><title type="html">DeepsvFilter:基于深度学习完成结果变异过滤</title><link href="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/" rel="alternate" type="text/html" title="DeepsvFilter:基于深度学习完成结果变异过滤" /><published>2025-03-16T17:11:00+08:00</published><updated>2025-03-16T17:11:00+08:00</updated><id>https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4</id><content type="html" xml:base="https://kunmonster.github.io//2025/03/16/DeepsvFilter-%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%88%90%E7%BB%93%E6%9E%9C%E5%8F%98%E5%BC%82%E8%BF%87%E6%BB%A4/"><![CDATA[<p>最近在做基因组结构变异相关工作，阅读相关论文，这篇论文就是关于基因组结构变异的，主要用于从寻找出的结构变异中去除假阳性结果，获取真实结构变异。</p>
 
 <h2 id="introduction">Introduction</h2>
 <hr />
