@@ -6,6 +6,8 @@ tags: [paper,Pangenome]
 toc: true
 ---
 
+学习泛基因组的基本概念以及构建方法
+
 
 ## Definition
 
@@ -14,12 +16,15 @@ toc: true
 
 
 Core genome 
+
 sequence shared by all individuals
 
 Accessory / Shell genome
+
 Sequence present in some but not all individuals
 
 Dispensable / Cloud genome
+
 Sequence found in only one individual
 
 ## Type of pangenomes

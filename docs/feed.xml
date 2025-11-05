@@ -1,18 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-11-05T16:05:12+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Pangenome学习：A gentle introduction to pangenomics</title><link href="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/" rel="alternate" type="text/html" title="Pangenome学习：A gentle introduction to pangenomics" /><published>2025-11-05T16:00:00+08:00</published><updated>2025-11-05T16:00:00+08:00</updated><id>https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0:A_gentle_introduction_to_pangenomics</id><content type="html" xml:base="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/"><![CDATA[<h2 id="definition">Definition</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-11-05T16:08:01+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Pangenome学习：A gentle introduction to pangenomics</title><link href="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/" rel="alternate" type="text/html" title="Pangenome学习：A gentle introduction to pangenomics" /><published>2025-11-05T16:00:00+08:00</published><updated>2025-11-05T16:00:00+08:00</updated><id>https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0:A_gentle_introduction_to_pangenomics</id><content type="html" xml:base="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/"><![CDATA[<p>学习泛基因组的基本概念以及构建方法</p>
+
+<h2 id="definition">Definition</h2>
 
 <ul>
   <li>一个物种或者一个群体存在的自然的变异，一个群体或者物种所有的基因组信息</li>
   <li>使用生物信息学工具得到的泛基因组</li>
 </ul>
 
-<p>Core genome 
-sequence shared by all individuals</p>
+<p>Core genome</p>
 
-<p>Accessory / Shell genome
-Sequence present in some but not all individuals</p>
+<p>sequence shared by all individuals</p>
 
-<p>Dispensable / Cloud genome
-Sequence found in only one individual</p>
+<p>Accessory / Shell genome</p>
+
+<p>Sequence present in some but not all individuals</p>
+
+<p>Dispensable / Cloud genome</p>
+
+<p>Sequence found in only one individual</p>
 
 <h2 id="type-of-pangenomes">Type of pangenomes</h2>
 <hr />
@@ -157,7 +162,7 @@ Sequence found in only one individual</p>
 
 <h2 id="reference">Reference</h2>
 <hr />
-<p>Chelsea A Matthews, Nathan S Watson-Haigh, Rachel A Burton, Anna E Sheppard, A gentle introduction to pangenomics, <em>Briefings in Bioinformatics</em>, Volume 25, Issue 6, November 2024, bbae588, <a href="https://doi.org/10.1093/bib/bbae588">https://doi.org/10.1093/bib/bbae588</a></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="paper" /><category term="Pangenome" /><summary type="html"><![CDATA[Definition]]></summary></entry><entry><title type="html">CSV-Filter数据准备解读</title><link href="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/" rel="alternate" type="text/html" title="CSV-Filter数据准备解读" /><published>2025-09-14T21:20:00+08:00</published><updated>2025-09-14T21:20:00+08:00</updated><id>https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB</id><content type="html" xml:base="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/"><![CDATA[<p>该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。</p>
+<p>Chelsea A Matthews, Nathan S Watson-Haigh, Rachel A Burton, Anna E Sheppard, A gentle introduction to pangenomics, <em>Briefings in Bioinformatics</em>, Volume 25, Issue 6, November 2024, bbae588, <a href="https://doi.org/10.1093/bib/bbae588">https://doi.org/10.1093/bib/bbae588</a></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="paper" /><category term="Pangenome" /><summary type="html"><![CDATA[学习泛基因组的基本概念以及构建方法]]></summary></entry><entry><title type="html">CSV-Filter数据准备解读</title><link href="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/" rel="alternate" type="text/html" title="CSV-Filter数据准备解读" /><published>2025-09-14T21:20:00+08:00</published><updated>2025-09-14T21:20:00+08:00</updated><id>https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB</id><content type="html" xml:base="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/"><![CDATA[<p>该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。</p>
 
 <p>该研究也将结构变异过滤问题转化为图像二分类问题。那么首要问题还是如何将结构变异转化为图像，以及negative training sample，与其他类似研究一样，该研究同样基于CIGAR比对信息来编码图像，并将图像编码拆解成：</p>
 <ol>
