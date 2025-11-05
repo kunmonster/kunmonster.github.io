@@ -1,4 +1,163 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-14T21:29:43+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">CSV-Filter数据准备解读</title><link href="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/" rel="alternate" type="text/html" title="CSV-Filter数据准备解读" /><published>2025-09-14T21:20:00+08:00</published><updated>2025-09-14T21:20:00+08:00</updated><id>https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB</id><content type="html" xml:base="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/"><![CDATA[<p>该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://kunmonster.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kunmonster.github.io//" rel="alternate" type="text/html" hreflang="en" /><updated>2025-11-05T16:05:12+08:00</updated><id>https://kunmonster.github.io//feed.xml</id><title type="html">kkmonster</title><subtitle>生命中有万事的可能</subtitle><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><entry><title type="html">Pangenome学习：A gentle introduction to pangenomics</title><link href="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/" rel="alternate" type="text/html" title="Pangenome学习：A gentle introduction to pangenomics" /><published>2025-11-05T16:00:00+08:00</published><updated>2025-11-05T16:00:00+08:00</updated><id>https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0:A_gentle_introduction_to_pangenomics</id><content type="html" xml:base="https://kunmonster.github.io//2025/11/05/Pangenome%E5%AD%A6%E4%B9%A0-A_gentle_introduction_to_pangenomics/"><![CDATA[<h2 id="definition">Definition</h2>
+
+<ul>
+  <li>一个物种或者一个群体存在的自然的变异，一个群体或者物种所有的基因组信息</li>
+  <li>使用生物信息学工具得到的泛基因组</li>
+</ul>
+
+<p>Core genome 
+sequence shared by all individuals</p>
+
+<p>Accessory / Shell genome
+Sequence present in some but not all individuals</p>
+
+<p>Dispensable / Cloud genome
+Sequence found in only one individual</p>
+
+<h2 id="type-of-pangenomes">Type of pangenomes</h2>
+<hr />
+
+<h3 id="prensence-absence-variation-pangenome-pav">Prensence-absence variation pangenome (PAV)</h3>
+<hr />
+
+<p>关注基因的存在与否，不关注基因具体的位置，序列，以及多样性等</p>
+
+<p>core genome ： 群体中每个个体都存在的基因，或者物种间每个物种都存在的基因</p>
+
+<p>accessory genome： 只在群体中部分个体存在的基因或者物种间部分物种存在的基因</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051557045.png" alt="image.png" /></p>
+
+<h4 id="construction">Construction</h4>
+
+<p>homolog-based strategy</p>
+
+<p>对每个样本进行de novo组装，组装后提取基因组中注释到的编码基因，并且在不同样本间根据基因序列相似性聚类，某个类别中如果包含所有的样本那么就认定为Core gene，否则认定为Accessory genes，通常用于原核生物，原核生物基因无内含子，比对，聚类成本较小。</p>
+
+<p>map-to-pan strategy</p>
+
+<p>将whole-genome sequencing reads比对到经过注释的具有代表性的泛基因组</p>
+<ul>
+  <li>测序深度最低10X</li>
+  <li>基因外显子至少5%的区域被至少1个reads覆盖，被认为基因存在的标志</li>
+</ul>
+
+<p>softcore
+当有一个样本中的Core gene没能被正确识别到的时候，那么整个Core gene合集可能就没有这个基因，为了防止这种情况，有些研究提出这个概念，允许在小部分样本中没识别到的基因为softcore</p>
+
+<h3 id="representative-sequence-pangenome">Representative sequence pangenome</h3>
+<hr />
+
+<p>使用尽可能少同源序列，并尽可能多的表示基因组多样性，通常由一个参考基因组以及其他非冗余参考序列组成(NRR, nonredundant reference), 其中NRR包含只在某一个成员中出现，但是不在reference中出现的</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051557915.png" alt="image.png" /></p>
+<h4 id="construction-1">Construction</h4>
+
+<p>将在参考基因组中不存在的基因组区域作为额外contig来构建</p>
+
+<ul>
+  <li>metagenome-like assembly of unaligned reads （低于10X的大样本测序数据首选）</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051502140.png" alt="image.png" /></p>
+
+<p>先将所有样本reads比对到参考基因组，没比对上的所有reads一起进行de novo assembly ，形成contig</p>
+
+<ul>
+  <li>independent assembly of unaligned reads</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051502072.png" alt="image.png" /></p>
+
+<p>先将每个样本reads比对到参考基因组，没比对上的按样本进行de novo组装，将组装好的contig根据序列相似度进行聚类，从每个聚类中选出一个作为参考基因组的补充（需要至少10x的read coverage）</p>
+
+<ul>
+  <li>iterative assembly of unaligned reads</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051505870.png" alt="image.png" /></p>
+
+<p>迭代式创建，单个样本先进行比对，然后将未比对的reads进行de novo assembly，用于扩充参考基因组，然后更新的参考基因组再用于其他样本。后续样本就先比对到更新的参考基因组，然后扩充参考基因组，一直迭代。</p>
+
+<ul>
+  <li>independent whole-genome assembly</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051506422.png" alt="image.png" /></p>
+
+<p>先将每个样本的reads进行de novo assembly至contig水平，然后将contig比对到参考基因组，所有样本未能比对至参考基因组的contigs进行聚类，从聚类结果中挑选每个类别中最长的序列用于扩充参考基因组</p>
+
+<h3 id="pangenome-graph-graphic-pangenome">pangenome graph (graphic pangenome)</h3>
+<hr />
+<p>可以是面向序列的和面向基因的，展示群体中变异和基因的位置关系。</p>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051526235.png" alt="image.png" /></p>
+
+<h4 id="construction-2">Construction</h4>
+
+<ul>
+  <li>Predetermined variants</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051536370.png" alt="image.png" /></p>
+
+<p>需要一个参考基因组，以及包含已有变异的VCF文件，后来新添加的变异作为分支节点添加到图上，形成一个有向无环图</p>
+
+<ul>
+  <li>Multiple sequence alignment</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051536320.png" alt="image.png" /></p>
+
+<p>多序列比对，直接将序列两两比对进行图形基因组构建，这种方法需要大量的计算资源，但是对于定相的基因组十分有用(Phased genome)</p>
+
+<ul>
+  <li>De Bruijn graphs</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/kunmonster/note_pic/main/note/202511051536087.png" alt="image.png" /></p>
+
+<p>将reads分成k-mers，然后根据k-1(k为kmer的长度)的重叠来进行图构建，kmer为图节点</p>
+
+<h4 id="applications">Applications</h4>
+
+<ul>
+  <li>变异检测与分型（variants calling and genotyping）</li>
+  <li>单倍型推断 (Haplotype inference; phasing of assemblies)</li>
+</ul>
+
+<h2 id="files-and-formats">Files and formats</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th>Linear</th>
+      <th>Pangenomic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Reference genome</td>
+      <td>.fa</td>
+      <td>.gfa</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Indexing</td>
+      <td>.bwt</td>
+      <td>.gbwt</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Alignment</td>
+      <td>.bam / .paf</td>
+      <td>.gam  / .gaf</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="reference">Reference</h2>
+<hr />
+<p>Chelsea A Matthews, Nathan S Watson-Haigh, Rachel A Burton, Anna E Sheppard, A gentle introduction to pangenomics, <em>Briefings in Bioinformatics</em>, Volume 25, Issue 6, November 2024, bbae588, <a href="https://doi.org/10.1093/bib/bbae588">https://doi.org/10.1093/bib/bbae588</a></p>]]></content><author><name>Feng kunjiang</name><email>fkj_monster@163.com</email></author><category term="paper" /><category term="Pangenome" /><summary type="html"><![CDATA[Definition]]></summary></entry><entry><title type="html">CSV-Filter数据准备解读</title><link href="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/" rel="alternate" type="text/html" title="CSV-Filter数据准备解读" /><published>2025-09-14T21:20:00+08:00</published><updated>2025-09-14T21:20:00+08:00</updated><id>https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB</id><content type="html" xml:base="https://kunmonster.github.io//2025/09/14/CSV-Filter%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87%E8%A7%A3%E8%AF%BB/"><![CDATA[<p>该研究基于深度学习开发了结构变异过滤工具，针对short-read 和 long-read方法检测的结构变异位点，本博客主要关注方法和材料部分。</p>
 
 <p>该研究也将结构变异过滤问题转化为图像二分类问题。那么首要问题还是如何将结构变异转化为图像，以及negative training sample，与其他类似研究一样，该研究同样基于CIGAR比对信息来编码图像，并将图像编码拆解成：</p>
 <ol>
